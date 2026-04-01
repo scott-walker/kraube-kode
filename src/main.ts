@@ -12,16 +12,20 @@ const claude = new Claude();
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 700,
-    minWidth: 500,
-    minHeight: 400,
+    width: 1600,
+    height: 1000,
+    minWidth: 800,
+    minHeight: 600,
     title: 'Kraube Kode',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       sandbox: true,
     },
+  });
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.setZoomFactor(2.0);
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -41,18 +45,20 @@ ipcMain.on('claude:stream', async (_event, prompt: string) => {
   try {
     const stream = claude.stream(prompt);
 
-    stream
+    const handle = stream
       .on('text', (chunk: string) => {
         wc.send('claude:stream:chunk', chunk);
-      })
-      .on('error', (err: Error) => {
-        wc.send('claude:stream:error', err.message);
       })
       .on('result', () => {
         wc.send('claude:stream:end');
       });
 
-    await stream.done();
+    // error event may vary by version
+    (handle as any).on('error', (err: Error) => {
+      wc.send('claude:stream:error', err.message);
+    });
+
+    await handle.done();
   } catch (err) {
     wc.send('claude:stream:error', err instanceof Error ? err.message : String(err));
     wc.send('claude:stream:end');
