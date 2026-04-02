@@ -1,0 +1,72 @@
+/* ─── Utility Classes ─── */
+
+/* Layout */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.items-center { align-items: center; }
+.items-end { align-items: flex-end; }
+.flex-1 { flex: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* Gaps */
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+
+/* Typography */
+.font-sans { font-family: var(--font-sans); }
+.font-mono { font-family: var(--font-mono); }
+.text-2xs { font-size: var(--text-2xs); }
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-md { font-size: var(--text-md); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.font-medium { font-weight: var(--weight-medium); }
+.font-semibold { font-weight: var(--weight-semibold); }
+
+/* Composite typography */
+.text-mono-xs { font-family: var(--font-mono); font-size: var(--text-2xs); }
+.text-mono-sm { font-family: var(--font-mono); font-size: var(--text-xs); }
+.text-mono-base { font-family: var(--font-mono); font-size: var(--text-sm); }
+
+/* Colors */
+.fg-primary { color: var(--fg-primary); }
+.fg-secondary { color: var(--fg-secondary); }
+.fg-tertiary { color: var(--fg-tertiary); }
+.fg-accent { color: var(--accent); }
+.fg-success { color: var(--success); }
+.fg-error { color: var(--error); }
+
+/* Surfaces */
+.surface-primary { background: var(--bg-primary); }
+.surface-secondary { background: var(--bg-secondary); }
+.surface-elevated { background: var(--bg-elevated); }
+.surface-code { background: var(--bg-code); border-radius: var(--radius-lg); overflow: hidden; }
+
+/* Buttons */
+.btn-reset { background: none; border: none; cursor: pointer; padding: 0; }
+.btn-icon { background: none; border: none; cursor: pointer; display: flex; padding: 0; color: var(--fg-tertiary); }
+
+/* Text utilities */
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.uppercase { text-transform: uppercase; }
+.tracking-wide { letter-spacing: 0.06em; }
+
+/* Spacing */
+.ml-auto { margin-left: auto; }
+
+/* Animations */
+.animate-fade-in { animation: fade-in var(--transition-base); }
+.animate-slide-up { animation: slide-up var(--transition-slow); }
+.animate-spin { animation: spin 2s linear infinite; }
+.animate-spin-fast { animation: spin 1.5s linear infinite; }
+
+/* Misc */
+.no-drag { -webkit-app-region: no-drag; }

@@ -1,0 +1,16 @@
+/* ─── TypingBar ─── */
+
+.typing-bar {
+  height: 2px;
+  border-radius: 1px;
+  background: transparent;
+  transition: all var(--transition-theme);
+  opacity: 0;
+  animation: none;
+}
+
+.typing-bar--active {
+  background: var(--accent);
+  opacity: 1;
+  animation: typing-bar 2s ease-in-out infinite;
+}

@@ -1,0 +1,32 @@
+/* ─── Window Controls ─── */
+
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 var(--space-3);
+  -webkit-app-region: no-drag;
+}
+
+.wc-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: radial-gradient(circle 7px, var(--bg-tertiary) 100%, transparent 100%);
+  transition: background var(--transition-fast);
+}
+
+.wc-btn--minimize:hover,
+.wc-btn--maximize:hover {
+  background: radial-gradient(circle 7px, var(--fg-tertiary) 100%, transparent 100%);
+}
+
+.wc-btn--close:hover {
+  background: radial-gradient(circle 7px, #ff5f57 100%, transparent 100%);
+}

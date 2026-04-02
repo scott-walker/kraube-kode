@@ -1,0 +1,23 @@
+/* ─── FilePill ─── */
+
+.file-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) 10px var(--space-1) var(--space-2);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--fg-secondary);
+  animation: fade-in var(--transition-normal);
+}
+
+.file-pill__remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-tertiary);
+  display: flex;
+  padding: 0;
+}

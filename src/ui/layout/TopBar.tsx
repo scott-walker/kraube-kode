@@ -1,0 +1,54 @@
+import { memo, useMemo } from 'react';
+import { useIsStreaming, useSidebarOpen, useSessions, useActiveSessionId, useSdkStatus, useActiveCwd } from '../../state/selectors';
+import { setSidebarOpen } from '../../state/actions';
+import { sessionInfoToUI } from '../../utils/format';
+import WindowControls from './WindowControls';
+import { Icons } from '../../icons';
+import './TopBar.css';
+
+export default memo(function TopBar() {
+  const isStreaming = useIsStreaming();
+  const sidebarOpen = useSidebarOpen();
+  const sdkStatus = useSdkStatus();
+  const activeCwd = useActiveCwd();
+  const sessions = useSessions();
+  const activeSessionId = useActiveSessionId();
+
+  const activeSession = useMemo(
+    () => sessions.map(s => sessionInfoToUI(s, s.sessionId === activeSessionId)).find(s => s.id === activeSessionId) ?? null,
+    [sessions, activeSessionId],
+  );
+
+  const name = activeSession?.name ?? 'New Session';
+  const project = activeCwd ? activeCwd.split('/').pop() || activeCwd : '';
+
+  return (
+    <div className="topbar">
+      <button className="topbar__toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        <Icons.Sidebar size={18} />
+      </button>
+      <div className="topbar__session">
+        <span className="topbar__session-name min-w-0 truncate">{name}</span>
+        {project && <span className="topbar__session-project shrink-0">{project}</span>}
+      </div>
+      <div className="topbar__status">
+        {(() => {
+          if (sdkStatus === 'initializing') return <>
+            <span className="topbar__status-dot topbar__status-dot--initializing" />
+            <span className="topbar__status-label">initializing</span>
+          </>;
+          if (sdkStatus === 'error') return <>
+            <span className="topbar__status-dot topbar__status-dot--error" />
+            <span className="topbar__status-label">error</span>
+          </>;
+          const label = isStreaming ? 'streaming' : 'ready';
+          return <>
+            <span className={`topbar__status-dot topbar__status-dot--${label}`} />
+            <span className="topbar__status-label">{label}</span>
+          </>;
+        })()}
+      </div>
+      <WindowControls />
+    </div>
+  );
+});

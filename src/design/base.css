@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base Styles ─── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+/* ─── Full Reset ─── */
+
+*:focus,
+*:focus-visible {
+  outline: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img, svg {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Selectable: chat messages and form inputs */
+.message__text,
+.message__text *,
+input,
+textarea {
+  user-select: text;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+* { scrollbar-width: none; }
+::-webkit-scrollbar { display: none; }
+
+button:hover { opacity: 0.85; }
+button:active { transform: scale(0.97); }
+
+/* ─── Theme Switch (instant, no transitions) ─── */
+
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+/* ─── App Root ─── */
+
+.app-root {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--fg-primary);
+  overflow: hidden;
+  transition: background var(--transition-theme), color var(--transition-theme);
+}
+
+/* ─── Keyframe Animations ─── */
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes typing-bar {
+  0%, 100% { transform: scaleX(0); transform-origin: left; }
+  25% { transform: scaleX(1); transform-origin: left; }
+  50% { transform: scaleX(1); transform-origin: right; }
+  75% { transform: scaleX(0); transform-origin: right; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(124, 108, 240, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(124, 108, 240, 0); }
+}
+
+.icon-spinner {
+  animation: spin 0.8s linear infinite;
+}

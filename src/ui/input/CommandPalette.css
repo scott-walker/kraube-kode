@@ -1,0 +1,79 @@
+.cmd-palette {
+  position: fixed;
+  z-index: 1000;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+  max-height: 320px;
+  overflow-y: auto;
+  animation: dropdown-slide-up var(--transition-fast);
+}
+
+.cmd-palette__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.cmd-palette__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition-fast);
+}
+
+.cmd-palette__item:hover,
+.cmd-palette__item.is-active {
+  background: var(--bg-elevated);
+}
+
+.cmd-palette__kind {
+  flex-shrink: 0;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  font-size: var(--text-2xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cmd-palette__kind--skill {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.cmd-palette__kind--system {
+  background: color-mix(in srgb, var(--fg-tertiary) 15%, transparent);
+  color: var(--fg-secondary);
+}
+
+.cmd-palette__kind--mcp {
+  background: color-mix(in srgb, var(--success) 15%, transparent);
+  color: var(--success);
+}
+
+.cmd-palette__name {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  color: var(--fg-primary);
+}
+
+.cmd-palette__desc {
+  flex: 1;
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}

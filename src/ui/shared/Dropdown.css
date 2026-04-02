@@ -1,0 +1,97 @@
+.dropdown {
+  position: relative;
+}
+
+.dropdown__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--fg-primary);
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.dropdown__trigger.is-open {
+  border-color: var(--accent);
+}
+
+.dropdown__label--placeholder {
+  color: var(--fg-tertiary);
+}
+
+.dropdown__chevron {
+  display: flex;
+  color: var(--fg-tertiary);
+  transform: rotate(90deg);
+  transition: transform var(--transition-fast);
+}
+
+.dropdown__chevron.is-open {
+  transform: rotate(270deg);
+}
+
+.dropdown__menu {
+  position: fixed;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+  z-index: 1000;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.dropdown__menu--down {
+  animation: dropdown-slide-down var(--transition-fast);
+}
+
+.dropdown__menu--up {
+  animation: dropdown-slide-up var(--transition-fast);
+}
+
+.dropdown__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--fg-secondary);
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.dropdown__item:hover {
+  background: var(--accent-dim);
+  color: var(--fg-primary);
+}
+
+.dropdown__item.is-active {
+  color: var(--accent);
+}
+
+.dropdown__item-hint {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+}
+
+@keyframes dropdown-slide-down {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dropdown-slide-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

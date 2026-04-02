@@ -1,0 +1,184 @@
+/* ─── Settings Overlay ─── */
+
+.settings-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  animation: fade-in var(--transition-base);
+}
+
+.settings-overlay__backdrop {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+}
+
+/* ─── Panel ─── */
+
+.settings-panel {
+  width: var(--settings-width);
+  height: 100%;
+  background: var(--bg-secondary);
+  padding: var(--space-7);
+  overflow-y: auto;
+  animation: slide-up var(--transition-slow);
+}
+
+.settings-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-7);
+}
+
+.settings-panel__title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+.settings-panel__close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  margin: calc(-1 * var(--space-3));
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.settings-panel__close-btn:hover {
+  color: var(--fg-primary);
+  background: var(--accent-dim);
+}
+
+/* ─── Form elements ─── */
+
+.settings-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: var(--space-3);
+}
+
+.settings-form__label {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.settings-form__input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 2px solid transparent;
+  color: var(--fg-primary);
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  transition: border-color 0.15s ease;
+}
+
+.settings-form__input:focus {
+  border-color: var(--accent);
+}
+
+.settings-form__hint {
+  font-size: var(--text-2xs);
+  color: var(--fg-tertiary);
+  margin-top: var(--space-1);
+  display: block;
+}
+
+/* ─── Model selector ─── */
+
+/* ─── Permission modes ─── */
+
+.settings-perm-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-bottom: var(--space-3);
+}
+
+.settings-perm-btn {
+  padding: 10px var(--space-3);
+  border-radius: var(--radius-md);
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-secondary);
+  transition: all var(--transition-base);
+}
+
+.settings-perm-btn.is-active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.settings-perm-btn__label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+}
+
+.settings-perm-btn__desc {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  margin-top: 2px;
+}
+
+/* ─── Appearance ─── */
+
+.settings-theme-grid {
+  display: flex;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.settings-theme-btn {
+  flex: 1;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  border: none;
+  cursor: pointer;
+  color: var(--fg-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.settings-theme-btn.is-active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* ─── Save button ─── */
+
+.settings-save-btn {
+  width: 100%;
+  padding: var(--space-3);
+  margin-top: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  transition: opacity var(--transition-base);
+}
+
+.settings-save-btn:disabled {
+  opacity: 0.6;
+}

@@ -1,0 +1,54 @@
+/* ─── CodeBlock ─── */
+
+.code-block {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-code);
+  margin-top: var(--space-2);
+}
+
+.code-block__header {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) 14px;
+  background: var(--bg-code-header);
+  gap: var(--space-2);
+}
+
+.code-block__filename {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  font-weight: var(--weight-medium);
+}
+
+.code-block__copy-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  transition: color var(--transition-base);
+  padding: 2px;
+  color: var(--fg-tertiary);
+}
+
+.code-block__copy-btn--copied {
+  color: var(--success);
+}
+
+.code-block__pre {
+  padding: 14px var(--space-4);
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  font-family: var(--font-mono);
+  color: var(--fg-code);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.code-block__pre::-webkit-scrollbar { display: block; height: 4px; }
+.code-block__pre::-webkit-scrollbar-track { background: transparent; }
+.code-block__pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }

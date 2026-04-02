@@ -1,0 +1,69 @@
+/* ─── ChatView ─── */
+
+.chat-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 48px var(--space-6);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.chat-view::-webkit-scrollbar { display: block; width: 5px; }
+.chat-view::-webkit-scrollbar-track { background: transparent; }
+.chat-view::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.chat-view__inner {
+  max-width: var(--chat-max-width);
+  margin: 0 auto;
+}
+
+.chat-view__loading {
+  display: flex;
+  justify-content: center;
+  padding-top: 40vh;
+}
+
+.chat-view__separator {
+  margin: var(--space-6) 0;
+}
+
+.chat-view__separator-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.chat-view__separator-label {
+  font-size: var(--text-2xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  color: var(--fg-tertiary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--fg-tertiary);
+  cursor: pointer;
+  transition: color var(--transition-base), background var(--transition-base);
+}
+
+.copy-btn:hover {
+  color: var(--fg-secondary);
+  background: var(--bg-elevated);
+}
+
+.chat-view__separator-line {
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--fg-tertiary) 15%, transparent);
+}

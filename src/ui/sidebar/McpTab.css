@@ -1,0 +1,150 @@
+/* ─── McpTab ─── */
+
+.mcp-tab__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-1) var(--space-2);
+  margin: calc(-1 * var(--space-2)) 0 0;
+  position: sticky;
+  top: calc(-1 * var(--space-2));
+  z-index: 10;
+  background: var(--bg-secondary);
+}
+
+.mcp-tab__title {
+  margin-right: auto;
+}
+
+.mcp-tab__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-6) 0;
+}
+
+.mcp-tab__title {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: var(--weight-medium);
+}
+
+.mcp-tab__icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-base), background var(--transition-base);
+}
+
+.mcp-tab__icon-btn:hover {
+  color: var(--fg-secondary);
+  background: var(--bg-elevated);
+}
+
+.mcp-tab__icon-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ─── Scope Groups ─── */
+
+.mcp-tab__scope-group {
+  margin-bottom: var(--space-3);
+}
+
+.mcp-tab__scope-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-2xs);
+  color: var(--fg-tertiary);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--space-1) var(--space-2);
+  font-weight: var(--weight-medium);
+}
+
+/* ─── Server Row ─── */
+
+.mcp-server {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: background var(--transition-base);
+  width: 100%;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.mcp-server:hover {
+  background: var(--bg-elevated);
+}
+
+.mcp-server__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  background: var(--fg-tertiary);
+}
+
+.mcp-server__dot--connected  { background: var(--success); }
+.mcp-server__dot--failed     { background: var(--error); }
+.mcp-server__dot--pending    { background: var(--warning); }
+.mcp-server__dot--needs-auth { background: var(--warning); }
+.mcp-server__dot--disabled   { background: var(--fg-tertiary); opacity: 0.5; }
+
+.mcp-server__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mcp-server__name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mcp-server__tools {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  font-family: var(--font-mono);
+}
+
+/* ─── Scope Badge ─── */
+
+.mcp-scope-badge {
+  font-size: var(--text-2xs);
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  font-weight: var(--weight-medium);
+}
+
+.mcp-scope-badge--project     { color: var(--info);    background: color-mix(in srgb, var(--info) 15%, transparent); }
+.mcp-scope-badge--global      { color: var(--accent);  background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.mcp-scope-badge--marketplace { color: var(--warning); background: color-mix(in srgb, var(--warning) 15%, transparent); }
+

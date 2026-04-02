@@ -1,0 +1,66 @@
+/* ─── Collapsible ─── */
+
+.collapsible {
+  margin-bottom: 2px;
+}
+
+.collapsible__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--space-2) 0;
+  cursor: pointer;
+  color: var(--fg-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  transition: color var(--transition-base);
+}
+
+.collapsible__trigger:hover { opacity: 1; }
+.collapsible__trigger:active { transform: none; }
+.collapsible__trigger--accent { color: var(--accent); }
+
+.collapsible__chevron {
+  display: flex;
+  transition: transform var(--transition-normal);
+}
+
+.collapsible__chevron--open { transform: rotate(90deg); }
+
+.collapsible__title {
+  text-transform: uppercase;
+  font-weight: var(--weight-medium);
+}
+
+.collapsible__badge {
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  margin-left: auto;
+}
+
+.collapsible__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--transition-normal);
+}
+
+.collapsible__body--open {
+  grid-template-rows: 1fr;
+}
+
+.collapsible__content {
+  overflow: hidden;
+  padding-left: var(--space-5);
+}
+
+.collapsible__body--open > .collapsible__content {
+  padding-top: var(--space-1);
+}

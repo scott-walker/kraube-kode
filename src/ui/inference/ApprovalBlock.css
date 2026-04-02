@@ -1,0 +1,69 @@
+/* ─── ApprovalBlock ─── */
+
+.approval-block {
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: var(--bg-elevated);
+  border-left: 2px solid var(--warning);
+  animation: slide-up var(--transition-slow);
+}
+
+.approval-block__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 10px;
+}
+
+.approval-block__title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-primary);
+}
+
+.approval-block__command {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--fg-secondary);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-code);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+}
+
+.approval-block__tool-name {
+  color: var(--fg-tertiary);
+}
+
+.approval-block__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.approval-block__btn {
+  padding: 7px 20px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-mono);
+  transition: opacity var(--transition-base);
+}
+
+.approval-block__btn--approve {
+  background: var(--accent);
+  color: #fff;
+}
+
+.approval-block__btn--deny {
+  background: var(--bg-tertiary);
+  color: var(--fg-secondary);
+}
+
+.approval-block__btn--always {
+  margin-left: auto;
+  background: var(--bg-tertiary);
+  color: var(--fg-tertiary);
+  font-weight: var(--weight-medium);
+}

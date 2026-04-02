@@ -1,0 +1,39 @@
+/* ─── ToolCallBlock ─── */
+
+.tool-call { --status-color: var(--fg-tertiary); }
+.tool-call[data-status="running"] { --status-color: var(--accent); }
+.tool-call[data-status="error"]   { --status-color: var(--error); }
+
+.tool-call {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  transition: all var(--transition-slow);
+}
+
+.tool-call__icon {
+  display: flex;
+  color: var(--status-color, var(--fg-tertiary));
+  transition: color var(--transition-slow);
+}
+
+.tool-call__name {
+  color: var(--fg-primary);
+  font-weight: var(--weight-medium);
+}
+
+.tool-call__detail {
+  color: var(--fg-tertiary);
+  font-size: var(--text-xs);
+}
+
+.tool-call__status {
+  margin-left: auto;
+  color: var(--fg-tertiary);
+  font-size: var(--text-xs);
+}

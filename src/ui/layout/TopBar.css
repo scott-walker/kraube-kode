@@ -1,0 +1,70 @@
+/* ─── TopBar ─── */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-6);
+  gap: var(--space-3);
+  flex-shrink: 0;
+  min-height: var(--topbar-height);
+  overflow: hidden;
+  -webkit-app-region: drag;
+}
+
+.topbar__toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-tertiary);
+  display: flex;
+  flex-shrink: 0;
+  transition: color var(--transition-base);
+  -webkit-app-region: no-drag;
+}
+
+.topbar__session {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.topbar__session-name {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+}
+
+.topbar__session-project {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--fg-tertiary);
+  background: var(--bg-elevated);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-xs);
+}
+
+.topbar__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  -webkit-app-region: no-drag;
+}
+
+.topbar__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  transition: background var(--transition-slow);
+}
+
+.topbar__status-dot--streaming    { background: var(--warning); }
+.topbar__status-dot--ready        { background: var(--success); }
+.topbar__status-dot--initializing { background: var(--fg-tertiary); }
+.topbar__status-dot--error        { background: var(--danger); }
+
+.topbar__status-label {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--fg-tertiary);
+}
