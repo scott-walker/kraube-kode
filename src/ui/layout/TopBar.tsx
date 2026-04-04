@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react';
 import { useIsStreaming, useSidebarOpen, useSessions, useActiveSessionId, useSdkStatus, useActiveCwd } from '../../state/selectors';
 import { setSidebarOpen } from '../../state/actions';
 import { sessionInfoToUI } from '../../utils/format';
+import Tooltip from '../shared/Tooltip';
 import WindowControls from './WindowControls';
 import { Icons } from '../../icons';
 import './TopBar.css';
@@ -28,8 +29,17 @@ export default memo(function TopBar() {
         <Icons.Sidebar size={18} />
       </button>
       <div className="topbar__session">
-        <span className="topbar__session-name min-w-0 truncate">{name}</span>
-        {project && <span className="topbar__session-project shrink-0">{project}</span>}
+        <div className="topbar__session-info">
+          <Tooltip text={name}>
+            <span className="topbar__session-name">{name}</span>
+          </Tooltip>
+          {activeCwd && <span className="topbar__session-cwd">{activeCwd}</span>}
+        </div>
+        {project && (
+          <Tooltip text={activeCwd}>
+            <span className="topbar__session-project shrink-0">{project}</span>
+          </Tooltip>
+        )}
       </div>
       <div className="topbar__status">
         {(() => {

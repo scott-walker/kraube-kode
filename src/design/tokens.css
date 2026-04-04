@@ -24,6 +24,7 @@
   /* Typography — families */
   --font-sans: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-brand: 'Alegreya Sans SC', var(--font-sans);
 
   /* Typography — sizes */
   --text-2xs: 10px;

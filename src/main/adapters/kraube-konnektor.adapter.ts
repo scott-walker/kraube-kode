@@ -33,6 +33,7 @@ export class ClaudeConnectorAdapter implements IClaudePort, IMcpPort {
 
   get ready() { return this._ready; }
   get initError() { return this._initError; }
+  get cwd() { return this.currentCwd || process.cwd(); }
 
   async init(): Promise<void> {
     this.claude = this.createInstance(this.settings);

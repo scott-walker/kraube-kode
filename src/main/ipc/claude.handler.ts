@@ -34,6 +34,8 @@ export function registerClaudeHandlers(
     return { status: 'initializing' };
   });
 
+  ipcMain.handle('claude:get-cwd', () => claudePort.cwd);
+
   ipcMain.handle('claude:list-sessions', () => claudePort.listSessions());
 
   ipcMain.handle('claude:supported-commands', () => claudePort.supportedCommands());

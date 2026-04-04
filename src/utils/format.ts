@@ -12,11 +12,17 @@ export function timeAgo(ts: number): string {
   return `${days}d ago`;
 }
 
+export function isProbeSession(info: SessionInfo): boolean {
+  return info.firstPrompt === '.' && (!info.summary || info.summary === '.');
+}
+
 export function sessionInfoToUI(info: SessionInfo, isActive: boolean): Session {
-  const name = info.summary || 'Untitled';
+  const name = info.summary && info.summary !== '.' ? info.summary : 'Untitled';
+  const project = info.cwd ? info.cwd.split('/').pop() || info.cwd : '';
   return {
     id: info.sessionId,
     name,
+    project,
     time: timeAgo(info.lastModified),
     active: isActive,
   };

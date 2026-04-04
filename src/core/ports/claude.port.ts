@@ -12,6 +12,7 @@ export interface IClaudePort {
 
   readonly ready: boolean;
   readonly initError: string | null;
+  readonly cwd: string;
 
   stream(prompt: string): AsyncIterable<StreamEvent>;
   abort(): void;
@@ -21,6 +22,9 @@ export interface IClaudePort {
     sessionId: string;
     summary: string;
     lastModified: number;
+    cwd?: string;
+    firstPrompt?: string;
+    gitBranch?: string;
   }>>;
 
   deleteSession(sessionId: string): Promise<boolean>;

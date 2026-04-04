@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('claude', {
   deleteSession: (sessionId: string) => ipcRenderer.invoke('claude:delete-session', sessionId) as Promise<boolean>,
   newSession: () => ipcRenderer.invoke('claude:new-session') as Promise<string | null>,
   supportedCommands: () => ipcRenderer.invoke('claude:supported-commands'),
+  getCwd: () => ipcRenderer.invoke('claude:get-cwd') as Promise<string>,
 
   onEvent: (cb: (event: unknown, data: unknown) => void) => {
     ipcRenderer.on('claude:event', cb);

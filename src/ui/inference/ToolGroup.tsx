@@ -27,7 +27,7 @@ export default function ToolGroup({ blocks }: Props) {
   return (
     <div className="tool-group">
       <button className="tool-group__toggle" onClick={() => setOpen(o => !o)}>
-        <Icons.ChevronRight size={12} className={`tool-group__chevron${open ? ' tool-group__chevron--open' : ''}`} />
+        <span className={`tool-group__chevron${open ? ' tool-group__chevron--open' : ''}`}><Icons.ChevronRight size={12} /></span>
         <span className="tool-group__count">{blocks.length} tools</span>
         <span className="tool-group__summary">{summarize(blocks)}</span>
       </button>

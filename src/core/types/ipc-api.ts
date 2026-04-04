@@ -24,6 +24,7 @@ export interface ClaudeAPI {
   deleteSession: (sessionId: string) => Promise<boolean>;
   newSession: () => Promise<string | null>;
   supportedCommands: () => Promise<SlashCommand[]>;
+  getCwd: () => Promise<string>;
   onEvent: (cb: (event: unknown, data: StreamEvent) => void) => () => void;
   onInitReady: (cb: () => void) => () => void;
   onInitStage: (cb: (event: unknown, data: { stage: string; message: string }) => void) => () => void;

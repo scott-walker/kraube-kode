@@ -22,6 +22,7 @@
 .diff-block__header:active { transform: none; }
 
 .diff-block__chevron {
+  display: flex;
   transition: transform var(--transition-fast);
   color: var(--fg-tertiary);
   flex-shrink: 0;

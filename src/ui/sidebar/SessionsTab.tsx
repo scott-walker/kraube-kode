@@ -63,6 +63,7 @@ export default memo(function SessionsTab() {
             <span className="session-item__name">{s.name}</span>
           </div>
           <div className={`session-item__meta${s.active ? ' session-item__meta--indented' : ''}`}>
+            {s.project && <span className="session-item__project">{s.project}</span>}
             <span className="session-item__time">{s.time}</span>
           </div>
         </button>

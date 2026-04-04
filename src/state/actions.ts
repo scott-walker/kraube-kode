@@ -54,6 +54,14 @@ export async function newSession() {
   });
 }
 
+function extractCwdFromRaw(raw: unknown[]): string | undefined {
+  for (const item of raw) {
+    const cwd = (item as Record<string, unknown>).cwd;
+    if (typeof cwd === 'string' && cwd) return cwd;
+  }
+  return undefined;
+}
+
 export async function selectSession(sessionId: string) {
   if (sessionId === useStore.getState().activeSessionId) return;
   streamBuffer.clear();
@@ -63,7 +71,8 @@ export async function selectSession(sessionId: string) {
     const raw = await window.claude.getSessionMessages(sessionId);
     if (useStore.getState().activeSessionId !== sessionId) return;
     const messages = mapSessionMessages(raw);
-    useStore.setState({ messages, messagesLoading: false });
+    const cwd = extractCwdFromRaw(raw);
+    useStore.setState({ messages, messagesLoading: false, ...(cwd ? { activeCwd: cwd } : {}) });
   } catch {
     useStore.setState({ messagesLoading: false });
   }

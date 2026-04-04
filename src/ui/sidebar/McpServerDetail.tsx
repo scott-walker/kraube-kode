@@ -57,7 +57,6 @@ export default memo(function McpServerDetail({ server, onBack }: Props) {
         <button
           className="mcp-detail__action-btn"
           onClick={() => reconnectMcpServer(server.name)}
-          title="Reconnect"
         >
           <Icons.Power size={14} />
           Reconnect
@@ -65,7 +64,6 @@ export default memo(function McpServerDetail({ server, onBack }: Props) {
         <button
           className="mcp-detail__action-btn mcp-detail__action-btn--danger"
           onClick={() => setConfirmRemove(true)}
-          title="Remove"
         >
           <Icons.Trash size={14} />
           Remove

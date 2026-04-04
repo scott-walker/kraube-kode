@@ -53,6 +53,8 @@
   color: var(--fg-primary);
   overflow-x: auto;
   min-width: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .message__text code {

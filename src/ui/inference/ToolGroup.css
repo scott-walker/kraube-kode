@@ -24,6 +24,7 @@
 .tool-group__toggle:active { transform: none; }
 
 .tool-group__chevron {
+  display: flex;
   color: var(--fg-tertiary);
   transition: transform var(--transition-fast);
   flex-shrink: 0;

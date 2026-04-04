@@ -28,11 +28,32 @@
   gap: var(--space-2);
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+}
+
+.topbar__session-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
 }
 
 .topbar__session-name {
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280px;
+}
+
+.topbar__session-cwd {
+  font-size: var(--text-2xs);
+  font-family: var(--font-mono);
+  color: var(--fg-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .topbar__session-project {

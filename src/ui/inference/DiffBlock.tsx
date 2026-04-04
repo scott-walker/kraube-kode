@@ -21,7 +21,7 @@ export default function DiffBlock({ filename, additions, deletions, lines }: Pro
   return (
     <div className="diff-block">
       <button className="diff-block__header" onClick={() => setOpen(o => !o)}>
-        <Icons.ChevronRight size={12} className={`diff-block__chevron${open ? ' diff-block__chevron--open' : ''}`} />
+        <span className={`diff-block__chevron${open ? ' diff-block__chevron--open' : ''}`}><Icons.ChevronRight size={12} /></span>
         <Icons.Edit size={12} />
         <span className="diff-block__filename">{filename}</span>
         <span className="diff-block__stats">

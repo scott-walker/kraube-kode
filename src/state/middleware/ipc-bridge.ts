@@ -5,6 +5,9 @@ import type { StreamEvent } from '../../types';
 export function initIpcBridge(): () => void {
   const cleanupReady = window.claude.onInitReady(() => {
     useStore.setState({ sdkStatus: 'ready', sdkMessage: '', sessionsLoading: true });
+    window.claude.getCwd()
+      .then(cwd => { if (cwd) useStore.setState({ activeCwd: cwd }); })
+      .catch(() => {});
     window.claude.listSessions()
       .then(sessions => useStore.setState({ sessions, sessionsLoading: false }))
       .catch(() => useStore.setState({ sessionsLoading: false }));
@@ -25,8 +28,16 @@ export function initIpcBridge(): () => void {
   });
 
   const cleanupEvents = window.claude.onEvent((_ipcEvent, event) => {
+    const typed = event as StreamEvent;
+
+    if (typed.type === 'system' && typed.subtype === 'init') {
+      const cwd = (typed.data as Record<string, unknown>).cwd;
+      if (typeof cwd === 'string' && cwd) useStore.setState({ activeCwd: cwd });
+      return;
+    }
+
     const blocks = streamBuffer.get();
-    const result = processEvent(event as StreamEvent, blocks);
+    const result = processEvent(typed, blocks);
 
     useStore.setState(s => {
       const messages = [...s.messages];
@@ -62,6 +73,9 @@ export function initIpcBridge(): () => void {
   window.claude.getSdkStatus().then(({ status, message }) => {
     if (status === 'ready') {
       useStore.setState({ sdkStatus: 'ready', sdkMessage: '', sessionsLoading: true });
+      window.claude.getCwd()
+        .then(cwd => { if (cwd) useStore.setState({ activeCwd: cwd }); })
+        .catch(() => {});
       window.claude.listSessions()
         .then(sessions => useStore.setState({ sessions, sessionsLoading: false }))
         .catch(() => useStore.setState({ sessionsLoading: false }));
