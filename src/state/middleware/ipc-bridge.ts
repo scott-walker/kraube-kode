@@ -1,5 +1,6 @@
 import { useStore } from '../store';
 import { processEvent, streamBuffer } from '../stream-processor';
+import { persistCurrentToolbarPrefs } from '../actions';
 import type { StreamEvent } from '../../types';
 
 export function initIpcBridge(): () => void {
@@ -56,7 +57,10 @@ export function initIpcBridge(): () => void {
     if (result.done) {
       streamBuffer.clear();
       if (result.sessionId) {
+        const prevId = useStore.getState().activeSessionId;
         useStore.setState({ activeSessionId: result.sessionId });
+        // Persist toolbar prefs for new sessions (first message assigns sessionId)
+        if (!prevId) persistCurrentToolbarPrefs(result.sessionId);
         window.claude.listSessions()
           .then(sessions => useStore.setState({ sessions, sessionsLoading: false }))
           .catch(() => {});

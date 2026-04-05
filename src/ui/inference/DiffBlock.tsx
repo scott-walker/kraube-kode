@@ -19,7 +19,7 @@ export default function DiffBlock({ filename, additions, deletions, lines }: Pro
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="diff-block">
+    <div className={`diff-block${open ? ' diff-block--open' : ''}`}>
       <button className="diff-block__header" onClick={() => setOpen(o => !o)}>
         <span className={`diff-block__chevron${open ? ' diff-block__chevron--open' : ''}`}><Icons.ChevronRight size={12} /></span>
         <Icons.Edit size={12} />

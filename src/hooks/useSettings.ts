@@ -4,7 +4,7 @@ import type { AppSettings } from '../types';
 
 export function useSettings() {
   const [form, setForm] = useState<AppSettings>({
-    executable: 'claude', configDir: '', permissionMode: 'default', model: 'sonnet', zoomFactor: 1.25,
+    executable: 'claude', configDir: '', permissionMode: 'default', zoomFactor: 1.25,
     transcriptionProvider: 'openai-whisper', transcriptionApiKey: '', transcriptionLanguage: '',
   });
   const [saving, setSaving] = useState(false);

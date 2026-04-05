@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Icons } from '../../icons';
 import { useSdkStatus, useSdkMessage } from '../../state/selectors';
+import logoSvg from '../../../etc/logo.svg';
 import './EmptyState.css';
 
 export default memo(function EmptyState() {
@@ -10,7 +11,10 @@ export default memo(function EmptyState() {
 
   return (
     <div className="chat-empty">
-      {ready ? <Icons.Terminal size={48} /> : <Icons.Spinner size={48} />}
+      {ready
+        ? <img src={logoSvg} alt="" className="chat-empty__mascot" />
+        : <Icons.Spinner size={48} />
+      }
       <h2 className="chat-empty__title">
         {ready ? 'Kraube Kode' : 'Starting Claude Code SDK…'}
       </h2>

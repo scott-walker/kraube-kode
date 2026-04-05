@@ -1,4 +1,5 @@
 import { useStore } from './store';
+import type { ToolbarPermission, ToolbarEffort } from './store';
 import { streamBuffer } from './stream-processor';
 import { mapSessionMessages } from '../utils/session-message-mapper';
 import type { Message, MessageBlock } from '../types';
@@ -29,6 +30,65 @@ export function setDragOver(over: boolean) {
   useStore.setState({ dragOver: over });
 }
 
+// ─── Toolbar ───
+
+const MODEL_CYCLE = ['sonnet', 'opus', 'haiku'];
+const PERMISSION_CYCLE: ToolbarPermission[] = ['default', 'acceptEdits', 'plan'];
+const EFFORT_CYCLE: ToolbarEffort[] = ['low', 'medium', 'high', 'max'];
+const TOOLBAR_DEFAULTS = { toolbarModel: 'sonnet', toolbarPermission: 'default' as ToolbarPermission, toolbarEffort: 'high' as ToolbarEffort };
+
+function persistPref(key: string, value: string) {
+  const sessionId = useStore.getState().activeSessionId;
+  if (sessionId) window.settings.saveSessionPref(sessionId, key, value);
+}
+
+export function cycleModel() {
+  useStore.setState(s => {
+    const idx = MODEL_CYCLE.indexOf(s.toolbarModel);
+    const next = MODEL_CYCLE[(idx + 1) % MODEL_CYCLE.length];
+    persistPref('model', next);
+    return { toolbarModel: next };
+  });
+}
+
+export function cyclePermission() {
+  useStore.setState(s => {
+    const idx = PERMISSION_CYCLE.indexOf(s.toolbarPermission);
+    const next = PERMISSION_CYCLE[(idx + 1) % PERMISSION_CYCLE.length];
+    persistPref('permission', next);
+    return { toolbarPermission: next };
+  });
+}
+
+export function cycleEffort() {
+  useStore.setState(s => {
+    const idx = EFFORT_CYCLE.indexOf(s.toolbarEffort);
+    const next = EFFORT_CYCLE[(idx + 1) % EFFORT_CYCLE.length];
+    persistPref('effort', next);
+    return { toolbarEffort: next };
+  });
+}
+
+export async function loadSessionPrefs(sessionId: string) {
+  const prefs = await window.settings.loadSessionPrefs(sessionId);
+  useStore.setState({
+    toolbarModel: prefs.model ?? TOOLBAR_DEFAULTS.toolbarModel,
+    toolbarPermission: (prefs.permission as ToolbarPermission) ?? TOOLBAR_DEFAULTS.toolbarPermission,
+    toolbarEffort: (prefs.effort as ToolbarEffort) ?? TOOLBAR_DEFAULTS.toolbarEffort,
+  });
+}
+
+export function persistCurrentToolbarPrefs(sessionId: string) {
+  const s = useStore.getState();
+  window.settings.saveSessionPref(sessionId, 'model', s.toolbarModel);
+  window.settings.saveSessionPref(sessionId, 'permission', s.toolbarPermission);
+  window.settings.saveSessionPref(sessionId, 'effort', s.toolbarEffort);
+}
+
+export function resetToolbarToDefaults() {
+  useStore.setState(TOOLBAR_DEFAULTS);
+}
+
 // ─── Files ───
 
 export function attachFiles(names: string[]) {
@@ -51,6 +111,7 @@ export async function newSession() {
     activeCwd: cwd,
     sdkStatus: 'initializing',
     sdkMessage: 'Warming up SDK session…',
+    ...TOOLBAR_DEFAULTS,
   });
 }
 
@@ -68,7 +129,10 @@ export async function selectSession(sessionId: string) {
   useStore.setState({ activeSessionId: sessionId, messages: [], messagesLoading: true });
 
   try {
-    const raw = await window.claude.getSessionMessages(sessionId);
+    const [raw] = await Promise.all([
+      window.claude.getSessionMessages(sessionId),
+      loadSessionPrefs(sessionId),
+    ]);
     if (useStore.getState().activeSessionId !== sessionId) return;
     const messages = mapSessionMessages(raw);
     const cwd = extractCwdFromRaw(raw);
@@ -81,12 +145,13 @@ export async function selectSession(sessionId: string) {
 export async function deleteSession(sessionId: string) {
   const deleted = await window.claude.deleteSession(sessionId);
   if (!deleted) return;
+  window.settings.deleteSessionPrefs(sessionId);
   useStore.setState(s => {
     const sessions = s.sessions.filter(ses => ses.sessionId !== sessionId);
     const cleared = s.activeSessionId === sessionId;
     return {
       sessions,
-      ...(cleared ? { activeSessionId: '', messages: [], messagesLoading: false } : {}),
+      ...(cleared ? { activeSessionId: '', messages: [], messagesLoading: false, ...TOOLBAR_DEFAULTS } : {}),
     };
   });
 }
@@ -94,7 +159,8 @@ export async function deleteSession(sessionId: string) {
 // ─── Chat ───
 
 export function sendMessage(text: string, files: string[]) {
-  if (useStore.getState().sdkStatus !== 'ready') return;
+  const state = useStore.getState();
+  if (state.sdkStatus !== 'ready') return;
 
   const userMsg: Message = { role: 'user', content: text, files: files.length > 0 ? files : undefined };
   const initialBlocks: MessageBlock[] = [{ type: 'thinking', phase: 'thinking' }];
@@ -107,7 +173,11 @@ export function sendMessage(text: string, files: string[]) {
     attachedFiles: [],
   }));
 
-  window.claude.send(text);
+  const queryOptions: Record<string, string> = { model: state.toolbarModel };
+  if (state.toolbarPermission !== 'default') queryOptions.permissionMode = state.toolbarPermission;
+  if (state.toolbarEffort !== 'high') queryOptions.effortLevel = state.toolbarEffort;
+
+  window.claude.send(text, files, queryOptions);
 }
 
 export function abortStream() {

@@ -5,6 +5,7 @@ import { sessionInfoToUI } from '../../utils/format';
 import Tooltip from '../shared/Tooltip';
 import WindowControls from './WindowControls';
 import { Icons } from '../../icons';
+import logoSvg from '../../../etc/logo.svg';
 import './TopBar.css';
 
 export default memo(function TopBar() {
@@ -26,7 +27,10 @@ export default memo(function TopBar() {
   return (
     <div className="topbar">
       <button className="topbar__toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-        <Icons.Sidebar size={18} />
+        {sidebarOpen
+          ? <Icons.Sidebar size={18} />
+          : <img src={logoSvg} alt="" width={28} height={28} />
+        }
       </button>
       <div className="topbar__session">
         <div className="topbar__session-info">

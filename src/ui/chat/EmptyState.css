@@ -6,16 +6,23 @@
   align-items: center;
   justify-content: center;
   height: 60vh;
-  opacity: 0.4;
+}
+
+.chat-empty__mascot {
+  width: 64px;
+  height: 64px;
+  opacity: 0.25;
+  margin-right: 8px;
 }
 
 .chat-empty__title {
   font-size: var(--text-lg);
   font-weight: var(--weight-medium);
   margin-top: var(--space-4);
+  color: var(--fg-tertiary);
 }
 
 .chat-empty__subtitle {
   font-size: var(--text-base);
-  color: var(--fg-tertiary);
+  color: var(--fg-placeholder);
 }

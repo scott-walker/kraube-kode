@@ -4,8 +4,6 @@ import { useTheme } from '../../state/selectors';
 import { toggleTheme, setSettingsOpen } from '../../state/actions';
 import { useSettings } from '../../hooks/useSettings';
 import Collapsible from '../shared/Collapsible';
-import Dropdown from '../shared/Dropdown';
-import type { DropdownOption } from '../shared/Dropdown';
 import SegmentedControl from '../shared/SegmentedControl';
 import type { PermissionModeOption } from '../../types';
 
@@ -14,18 +12,6 @@ const PERMISSION_MODES: { value: PermissionModeOption; label: string; desc: stri
   { value: 'acceptEdits',       label: 'Accept Edits', desc: 'Auto-accept file edits' },
   { value: 'plan',              label: 'Plan',         desc: 'Read-only, no modifications' },
   { value: 'bypassPermissions', label: 'Bypass All',   desc: 'Skip all permission checks' },
-];
-
-const MODEL_SEGMENTS = [
-  { value: 'sonnet', label: 'Sonnet' },
-  { value: 'opus',   label: 'Opus' },
-  { value: 'haiku',  label: 'Haiku' },
-];
-
-const LANGUAGES: DropdownOption[] = [
-  { value: '',   label: 'Auto-detect', hint: 'auto' },
-  { value: 'en', label: 'English',     hint: 'en' },
-  { value: 'ru', label: 'Русский',     hint: 'ru' },
 ];
 
 const LANGUAGE_SEGMENTS = [
@@ -64,14 +50,6 @@ export default memo(function SettingsPanel() {
             <span className="settings-form__hint">CLAUDE_CONFIG_DIR — leave empty for default</span>
           </div>
         </div>
-      </Collapsible>
-
-      <Collapsible title="Model" icon={<Icons.Brain size={12} />} defaultOpen>
-        <SegmentedControl
-          options={MODEL_SEGMENTS}
-          value={form.model}
-          onChange={v => update({ model: v })}
-        />
       </Collapsible>
 
       <Collapsible title="Permissions" icon={<Icons.AlertCircle size={12} />}>

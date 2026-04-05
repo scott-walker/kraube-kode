@@ -1,6 +1,7 @@
 import type { Message, MessageBlock } from '../core/types/message';
 import { isToolVisible } from './tool-visibility';
 import { diffFromEdit } from './diff-from-edit';
+import { toolDetail } from './tool-detail';
 
 interface RawContentBlock {
   type: string;
@@ -20,7 +21,7 @@ interface RawSessionEntry {
 
 const HIDDEN_TAGS = /^<(system-reminder|local-command)/;
 const TASK_TAG = /^<task-notification>/;
-const COMMAND_TAG = /^<command-name>/;
+const COMMAND_TAG = /(<command-name>|<command-message>)/;
 
 function isHiddenSystem(text: string): boolean {
   return HIDDEN_TAGS.test(text.trim());
@@ -72,18 +73,6 @@ function mapContentBlocks(blocks: RawContentBlock[]): { text: string; messageBlo
   }
 
   return { text, messageBlocks };
-}
-
-function toolDetail(name: string, input: Record<string, unknown>): string | undefined {
-  const truncate = (s: string | undefined) => s && s.length > 60 ? s.slice(0, 60) + '…' : s;
-  switch (name) {
-    case 'Read': case 'Write': case 'Edit': return input.file_path as string | undefined;
-    case 'Bash':   return truncate(input.command as string | undefined);
-    case 'Grep':   return input.pattern as string | undefined;
-    case 'Glob':   return input.pattern as string | undefined;
-    case 'Agent':  return input.description as string | undefined;
-    default:       return undefined;
-  }
 }
 
 function tryParseSystemText(text: string, messages: Message[]): boolean {

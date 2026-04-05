@@ -19,6 +19,17 @@ const MIGRATIONS: Migration[] = [
       );
     `);
   },
+  // v2: per-session preferences (model, permission, effort)
+  (db) => {
+    db.exec(`
+      CREATE TABLE session_prefs (
+        session_id TEXT NOT NULL,
+        key        TEXT NOT NULL,
+        value      TEXT NOT NULL,
+        PRIMARY KEY (session_id, key)
+      );
+    `);
+  },
 ];
 
 export class SqliteAdapter implements IStoragePort {
@@ -67,6 +78,27 @@ export class SqliteAdapter implements IStoragePort {
       catch { result[row.key] = row.value; }
     }
     return result;
+  }
+
+  getSessionPrefs(sessionId: string): Record<string, string> {
+    const rows = this.requireDb()
+      .prepare('SELECT key, value FROM session_prefs WHERE session_id = ?')
+      .all(sessionId) as Array<{ key: string; value: string }>;
+    const result: Record<string, string> = {};
+    for (const row of rows) result[row.key] = row.value;
+    return result;
+  }
+
+  setSessionPref(sessionId: string, key: string, value: string): void {
+    this.requireDb()
+      .prepare('INSERT OR REPLACE INTO session_prefs (session_id, key, value) VALUES (?, ?, ?)')
+      .run(sessionId, key, value);
+  }
+
+  deleteSessionPrefs(sessionId: string): void {
+    this.requireDb()
+      .prepare('DELETE FROM session_prefs WHERE session_id = ?')
+      .run(sessionId);
   }
 
   runMigrations(): void {

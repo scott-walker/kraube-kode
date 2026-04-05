@@ -7,7 +7,6 @@ export interface AppSettings {
   executable: string;
   configDir: string;
   permissionMode: PermissionModeOption;
-  model: string;
   zoomFactor: number;
   transcriptionProvider: TranscriptionProvider;
   transcriptionApiKey: string;
@@ -18,7 +17,6 @@ export const DEFAULT_SETTINGS: Readonly<AppSettings> = {
   executable: 'claude',
   configDir: '',
   permissionMode: 'default',
-  model: 'sonnet',
   zoomFactor: 1.25,
   ...DEFAULT_TRANSCRIPTION_SETTINGS,
 };

@@ -27,7 +27,6 @@ export class SettingsService {
       executable: this.storage.getSetting('executable', DEFAULT_SETTINGS.executable),
       configDir: this.storage.getSetting('configDir', DEFAULT_SETTINGS.configDir),
       permissionMode: this.storage.getSetting('permissionMode', DEFAULT_SETTINGS.permissionMode),
-      model: this.storage.getSetting('model', DEFAULT_SETTINGS.model),
       zoomFactor: Number(this.storage.getSetting('zoomFactor', String(DEFAULT_SETTINGS.zoomFactor))),
       transcriptionProvider: this.storage.getSetting('transcriptionProvider', DEFAULT_SETTINGS.transcriptionProvider),
       transcriptionApiKey: this.storage.getSetting('transcriptionApiKey', DEFAULT_SETTINGS.transcriptionApiKey),

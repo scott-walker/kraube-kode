@@ -12,14 +12,14 @@ export class StreamGuard {
 
   get isStreaming(): boolean { return this.active; }
 
-  async *stream(prompt: string): AsyncGenerator<StreamEvent> {
+  async *stream(prompt: string, input?: string, options?: Record<string, string>): AsyncGenerator<StreamEvent> {
     if (this.active) {
       this.claude.abort();
     }
 
     this.active = true;
     try {
-      for await (const event of this.claude.stream(prompt)) {
+      for await (const event of this.claude.stream(prompt, input, options)) {
         yield event;
       }
     } finally {

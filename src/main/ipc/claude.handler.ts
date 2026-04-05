@@ -1,13 +1,42 @@
 import { ipcMain, dialog, type BrowserWindow } from 'electron';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { basename, join } from 'node:path';
+import { tmpdir } from 'node:os';
 import type { IClaudePort } from '../../core/ports/claude.port';
 import type { StreamGuard } from '../services/stream-guard';
+
+const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg']);
+
+function isImagePath(filePath: string): boolean {
+  const ext = filePath.slice(filePath.lastIndexOf('.')).toLowerCase();
+  return IMAGE_EXTS.has(ext);
+}
+
+async function buildFileInput(files: string[]): Promise<{ input?: string; images: string[] }> {
+  if (files.length === 0) return { images: [] };
+  const textParts: string[] = [];
+  const images: string[] = [];
+  for (const filePath of files) {
+    if (isImagePath(filePath)) {
+      images.push(filePath);
+    } else {
+      try {
+        const content = await readFile(filePath, 'utf-8');
+        textParts.push(`File: ${basename(filePath)} (${filePath})\n\`\`\`\n${content}\n\`\`\``);
+      } catch {
+        textParts.push(`File: ${basename(filePath)} (${filePath})\n[Error: could not read file]`);
+      }
+    }
+  }
+  return { input: textParts.length > 0 ? textParts.join('\n\n') : undefined, images };
+}
 
 export function registerClaudeHandlers(
   getWindow: () => BrowserWindow | null,
   claudePort: IClaudePort,
   streamGuard: StreamGuard,
 ): void {
-  ipcMain.on('claude:send', async (_event, prompt: string) => {
+  ipcMain.on('claude:send', async (_event, prompt: string, files?: string[], options?: Record<string, string>) => {
     const wc = getWindow()?.webContents;
     if (!wc) return;
 
@@ -17,7 +46,11 @@ export function registerClaudeHandlers(
     }
 
     try {
-      for await (const event of streamGuard.stream(prompt)) {
+      const { input, images } = await buildFileInput(files ?? []);
+      const fullPrompt = images.length > 0
+        ? `${prompt}\n\n[Attached images: ${images.join(', ')}]`
+        : prompt;
+      for await (const event of streamGuard.stream(fullPrompt, input, options)) {
         wc.send('claude:event', event);
       }
     } catch (err) {
@@ -35,6 +68,15 @@ export function registerClaudeHandlers(
   });
 
   ipcMain.handle('claude:get-cwd', () => claudePort.cwd);
+
+  ipcMain.handle('claude:save-temp-image', async (_event, bytes: Uint8Array, mimeType: string) => {
+    const ext = mimeType === 'image/png' ? '.png' : mimeType === 'image/jpeg' ? '.jpg' : '.png';
+    const dir = join(tmpdir(), 'kraube-kode-images');
+    await mkdir(dir, { recursive: true });
+    const filePath = join(dir, `paste-${Date.now()}${ext}`);
+    await writeFile(filePath, Buffer.from(bytes));
+    return filePath;
+  });
 
   ipcMain.handle('claude:list-sessions', () => claudePort.listSessions());
 

@@ -11,7 +11,7 @@ export interface SlashCommand {
 }
 
 export interface ClaudeAPI {
-  send: (prompt: string) => void;
+  send: (prompt: string, files?: string[], options?: Record<string, string>) => void;
   abort: () => void;
   getSdkStatus: () => Promise<{ status: 'initializing' | 'ready' | 'error'; message?: string }>;
   listSessions: () => Promise<SessionInfo[]>;
@@ -25,6 +25,7 @@ export interface ClaudeAPI {
   newSession: () => Promise<string | null>;
   supportedCommands: () => Promise<SlashCommand[]>;
   getCwd: () => Promise<string>;
+  saveTempImage: (bytes: Uint8Array, mimeType: string) => Promise<string>;
   onEvent: (cb: (event: unknown, data: StreamEvent) => void) => () => void;
   onInitReady: (cb: () => void) => () => void;
   onInitStage: (cb: (event: unknown, data: { stage: string; message: string }) => void) => () => void;
@@ -34,6 +35,9 @@ export interface ClaudeAPI {
 export interface SettingsAPI {
   load: () => Promise<AppSettings>;
   save: (settings: AppSettings) => Promise<AppSettings>;
+  loadSessionPrefs: (sessionId: string) => Promise<Record<string, string>>;
+  saveSessionPref: (sessionId: string, key: string, value: string) => Promise<void>;
+  deleteSessionPrefs: (sessionId: string) => Promise<void>;
 }
 
 export interface WindowControlsAPI {

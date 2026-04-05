@@ -2,6 +2,7 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useIsStreaming, useAttachedFiles, useTranscriptionConfigured, useActiveSessionId } from '../../state/selectors';
 import { sendMessage, attachFiles, removeFile } from '../../state/actions';
 import { useVoiceInput } from '../../hooks/useVoiceInput';
+import { useImagePaste } from '../../hooks/useImagePaste';
 import Tooltip from '../shared/Tooltip';
 import FilePill from '../shared/FilePill';
 import InputToolbar from './InputToolbar';
@@ -122,10 +123,16 @@ export default memo(function InputArea() {
   }, []);
 
   const handleSlashClick = useCallback(() => {
-    setCmdOpen(prev => !prev);
-    setText(prev => prev.startsWith('/') ? prev : '/');
+    setCmdOpen(prev => {
+      if (prev || text.startsWith('/')) {
+        setText('');
+        return false;
+      }
+      setText('/');
+      return true;
+    });
     inputRef.current?.focus();
-  }, []);
+  }, [text]);
 
   const handleSubmit = useCallback(() => {
     const trimmed = text.trim();
@@ -137,11 +144,19 @@ export default memo(function InputArea() {
   }, [text, isStreaming, attachedFiles, sessionId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape' && showPalette) {
+      e.preventDefault();
+      setCmdOpen(false);
+      setText('');
+      return;
+    }
     if ((e.key === 'Enter' && e.metaKey) || (e.key === 'Enter' && e.ctrlKey)) {
       e.preventDefault();
       handleSubmit();
     }
   };
+
+  const handlePaste = useImagePaste();
 
   const handleInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const el = e.currentTarget;
@@ -170,7 +185,7 @@ export default memo(function InputArea() {
             <label className="input-area__attach-label">
               <Icons.Paperclip size={18} />
               <input type="file" multiple className="input-area__file-input"
-                onChange={e => attachFiles(Array.from(e.target.files || []).map(f => f.name))} />
+                onChange={e => attachFiles(Array.from(e.target.files || []).map(f => (f as File & { path: string }).path || f.name))} />
             </label>
             <Tooltip text="Commands">
               <button onClick={handleSlashClick} className={`input-area__slash-btn${text.startsWith('/') ? ' is-active' : ''}`}>
@@ -184,6 +199,7 @@ export default memo(function InputArea() {
                 onChange={e => setText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onInput={handleInput}
+                onPaste={handlePaste}
                 placeholder="Ask Claude to code something..."
                 rows={1}
                 disabled={isStreaming}
@@ -199,7 +215,7 @@ export default memo(function InputArea() {
               </button>
             </Tooltip>
             <button onClick={handleSubmit}
-              className={`input-area__btn input-area__btn--send${text.trim() ? ' is-active' : ''}`}>
+              className={`input-area__btn input-area__btn--send${text.trim() && recordingState === 'idle' ? ' is-active' : ''}`}>
               <Icons.Send size={16} />
             </button>
           </div>

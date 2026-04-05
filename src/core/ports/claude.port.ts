@@ -7,14 +7,14 @@ export interface InitStageInfo {
 
 export interface IClaudePort {
   init(): Promise<void>;
-  reinit(settings: { executable: string; configDir: string; permissionMode: string; model: string }): void;
+  reinit(settings: { executable: string; configDir: string; permissionMode: string }): void;
   newSession(cwd: string): void;
 
   readonly ready: boolean;
   readonly initError: string | null;
   readonly cwd: string;
 
-  stream(prompt: string): AsyncIterable<StreamEvent>;
+  stream(prompt: string, input?: string, options?: Record<string, string>): AsyncIterable<StreamEvent>;
   abort(): void;
   close(): void;
 

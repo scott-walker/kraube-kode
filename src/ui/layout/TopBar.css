@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   padding: var(--space-3) var(--space-6);
-  gap: var(--space-3);
+  gap: var(--space-6);
   flex-shrink: 0;
   min-height: var(--topbar-height);
   overflow: hidden;

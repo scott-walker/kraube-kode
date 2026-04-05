@@ -38,7 +38,10 @@ export const useMcpServersByScope = () => {
     return grouped;
   }, [servers]);
 };
-export const useMemories        = () => useStore(s => s.memories);
+export const useMemories            = () => useStore(s => s.memories);
+export const useToolbarModel            = () => useStore(s => s.toolbarModel);
+export const useToolbarPermission   = () => useStore(s => s.toolbarPermission);
+export const useToolbarEffort       = () => useStore(s => s.toolbarEffort);
 export const useCanSend         = () => useStore(s => s.sdkStatus === 'ready' && !selectIsStreaming(s));
 export const useSdkStatus        = () => useStore(s => s.sdkStatus);
 export const useSdkMessage       = () => useStore(s => s.sdkMessage);

@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { useMessages, useMessagesLoading } from '../../state/selectors';
 import { useAutoScroll } from '../../hooks/useAutoScroll';
+import { Icons } from '../../icons';
 import MessageBubble from './MessageBubble';
 import EmptyState from './EmptyState';
 import CopyButton from './CopyButton';
@@ -29,8 +30,11 @@ export default memo(function ChatView() {
               {showSep && (
                 <div className="chat-view__separator">
                   <div className="chat-view__separator-row">
-                    <span className="chat-view__separator-label">
-                      {msg.role === 'user' ? 'YOU' : 'KRAUBE'}
+                    <span className={`chat-view__separator-label${msg.role === 'assistant' ? ' chat-view__separator-label--ai' : ''}`}>
+                      {msg.role === 'user'
+                        ? <><Icons.Prompt size={12} /> YOU</>
+                        : <><Icons.Sparkle size={12} /> KRAUBE</>
+                      }
                     </span>
                     <CopyButton text={prev.content ?? ''} />
                   </div>

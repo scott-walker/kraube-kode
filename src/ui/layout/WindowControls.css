@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 0 var(--space-5) 0 0;
+  padding: 0;
   -webkit-app-region: no-drag;
 }
 

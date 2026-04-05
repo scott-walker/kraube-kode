@@ -9,7 +9,7 @@ export function useDragDrop() {
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    attachFiles(Array.from(e.dataTransfer.files).map(f => f.name));
+    attachFiles(Array.from(e.dataTransfer.files).map(f => (f as File & { path: string }).path || f.name));
   };
 
   return { dragOver, onDragOver, onDragLeave, onDrop };

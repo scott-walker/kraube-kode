@@ -1,5 +1,6 @@
 import type { MessageBlock, StreamEvent, ToolCallData } from '../types';
 import { diffFromEdit } from '../utils/diff-from-edit';
+import { toolDetail } from '../utils/tool-detail';
 
 // ─── Mutable stream buffer (one stream at a time, per architecture §08) ───
 
@@ -27,18 +28,6 @@ function removeActiveThinking(blocks: MessageBlock[]) {
     if (b.type === 'thinking' && b.phase === 'thinking' && !b.content) {
       blocks.splice(i, 1);
     }
-  }
-}
-
-function toolDetail(toolName: string, input: Record<string, unknown>): string | undefined {
-  const truncate = (s: string | undefined) => s && s.length > 60 ? s.slice(0, 60) + '…' : s;
-  switch (toolName) {
-    case 'Read': case 'Write': case 'Edit': return input.file_path as string | undefined;
-    case 'Bash':   return truncate(input.command as string | undefined);
-    case 'Grep':   return input.pattern as string | undefined;
-    case 'Glob':   return input.pattern as string | undefined;
-    case 'Agent':  return input.description as string | undefined;
-    default:       return undefined;
   }
 }
 

@@ -4,7 +4,17 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--bg-code);
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.diff-block:hover {
+  border-color: var(--accent);
+}
+
+.diff-block--open {
+  border-color: var(--accent);
 }
 
 .diff-block__header {
@@ -37,6 +47,12 @@
   font-size: var(--text-xs);
   color: var(--fg-tertiary);
   font-weight: var(--weight-medium);
+  transition: color 0.15s ease;
+}
+
+.diff-block:hover .diff-block__filename,
+.diff-block--open .diff-block__filename {
+  color: var(--accent);
 }
 
 .diff-block__stats {
@@ -46,11 +62,11 @@
 }
 
 .diff-block__additions {
-  color: var(--success);
+  color: var(--accent);
 }
 
 .diff-block__deletions {
-  color: var(--error);
+  color: var(--fg-tertiary);
 }
 
 .diff-block__pre {
@@ -60,23 +76,30 @@
   line-height: 1.7;
   font-family: var(--font-mono);
   overflow-x: auto;
+  background: var(--bg-diff);
+  color: var(--fg-diff);
+  user-select: text;
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: transparent transparent;
+}
+
+.diff-block__pre:hover {
+  scrollbar-color: var(--accent) transparent;
 }
 
 .diff-block__pre::-webkit-scrollbar { display: block; height: 4px; }
 .diff-block__pre::-webkit-scrollbar-track { background: transparent; }
-.diff-block__pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.diff-block__pre::-webkit-scrollbar-thumb { background: transparent; border-radius: 2px; }
+.diff-block__pre:hover::-webkit-scrollbar-thumb { background: var(--accent); }
 
 .diff-line-add {
-  color: var(--success);
+  color: var(--fg-diff-add);
 }
 
 .diff-line-remove {
-  color: var(--error);
-  opacity: 0.8;
+  color: var(--fg-diff-remove);
 }
 
 .diff-line-context {
-  color: var(--fg-code);
+  color: var(--fg-diff);
 }

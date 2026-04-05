@@ -1,7 +1,7 @@
 /* ─── Message ─── */
 
 .message {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-4);
   animation: slide-up var(--transition-slow);
   min-width: 0;
 }
@@ -42,7 +42,7 @@
 .message__body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-1);
   min-width: 0;
   overflow: hidden;
 }
@@ -53,7 +53,6 @@
   color: var(--fg-primary);
   overflow-x: auto;
   min-width: 0;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 
@@ -61,8 +60,35 @@
   font-family: var(--font-mono);
   font-size: var(--text-base);
   background: var(--bg-elevated);
-  padding: 1px 6px;
+  padding: 2px 12px;
   border-radius: var(--radius-xs);
+  cursor: pointer;
+  position: relative;
+}
+
+.message__text code:hover { opacity: 0.8; }
+
+.message__text code .code-label {
+  display: none;
+}
+
+.message__text code.is-copied {
+  position: relative;
+  color: transparent;
+}
+
+.message__text code.is-copied .code-label {
+  position: absolute;
+  inset: 0;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
 }
 
 .message__text pre {

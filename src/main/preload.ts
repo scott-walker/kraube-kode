@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('windowControls', {
 });
 
 contextBridge.exposeInMainWorld('claude', {
-  send: (prompt: string) => ipcRenderer.send('claude:send', prompt),
+  send: (prompt: string, files?: string[], options?: Record<string, string>) => ipcRenderer.send('claude:send', prompt, files, options),
   abort: () => ipcRenderer.send('claude:abort'),
   getSdkStatus: () => ipcRenderer.invoke('claude:get-sdk-status'),
   listSessions: () => ipcRenderer.invoke('claude:list-sessions'),
@@ -17,6 +17,8 @@ contextBridge.exposeInMainWorld('claude', {
   newSession: () => ipcRenderer.invoke('claude:new-session') as Promise<string | null>,
   supportedCommands: () => ipcRenderer.invoke('claude:supported-commands'),
   getCwd: () => ipcRenderer.invoke('claude:get-cwd') as Promise<string>,
+  saveTempImage: (bytes: Uint8Array, mimeType: string) =>
+    ipcRenderer.invoke('claude:save-temp-image', bytes, mimeType) as Promise<string>,
 
   onEvent: (cb: (event: unknown, data: unknown) => void) => {
     ipcRenderer.on('claude:event', cb);
@@ -51,6 +53,10 @@ contextBridge.exposeInMainWorld('mcp', {
 contextBridge.exposeInMainWorld('settings', {
   load: () => ipcRenderer.invoke('settings:load'),
   save: (settings: unknown) => ipcRenderer.invoke('settings:save', settings),
+  loadSessionPrefs: (sessionId: string) => ipcRenderer.invoke('settings:load-session-prefs', sessionId),
+  saveSessionPref: (sessionId: string, key: string, value: string) =>
+    ipcRenderer.invoke('settings:save-session-pref', sessionId, key, value),
+  deleteSessionPrefs: (sessionId: string) => ipcRenderer.invoke('settings:delete-session-prefs', sessionId),
 });
 
 contextBridge.exposeInMainWorld('transcription', {

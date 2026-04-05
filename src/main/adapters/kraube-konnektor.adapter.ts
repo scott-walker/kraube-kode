@@ -58,11 +58,12 @@ export class ClaudeConnectorAdapter implements IClaudePort, IMcpPort {
     this.init().catch(() => {});
   }
 
-  stream(prompt: string): AsyncIterable<StreamEvent> {
+  stream(prompt: string, input?: string, options?: Record<string, string>): AsyncIterable<StreamEvent> {
     if (!this.claude || !this._ready) {
       throw new Error('SDK not ready');
     }
-    return this.claude.stream(prompt);
+    const queryOptions = input ? { ...options, input } : options;
+    return this.claude.stream(prompt, queryOptions);
   }
 
   abort(): void { this.claude?.abort(); }
@@ -172,7 +173,6 @@ export class ClaudeConnectorAdapter implements IClaudePort, IMcpPort {
 
     return new Claude({
       executable: s.executable || undefined,
-      model: s.model || undefined,
       permissionMode: s.permissionMode === 'bypassPermissions' ? 'bypassPermissions' : s.permissionMode,
       allowDangerouslySkipPermissions: s.permissionMode === 'bypassPermissions',
       env: Object.keys(env).length > 0 ? env : undefined,

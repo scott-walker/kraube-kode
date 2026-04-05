@@ -38,7 +38,7 @@ let mainWindow: BrowserWindow | null = null;
 const getWindow = () => mainWindow;
 
 // ── IPC ──
-registerSettingsHandlers(settingsService, () => claudeAdapter.reinit(settingsService.current));
+registerSettingsHandlers(settingsService, storage, () => claudeAdapter.reinit(settingsService.current));
 registerClaudeHandlers(getWindow, claudeAdapter, streamGuard);
 registerWindowHandlers(getWindow, claudeAdapter);
 registerTranscriptionHandlers(getTranscriptionAdapter, settingsService);
@@ -49,6 +49,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1600, height: 1000, minWidth: 800, minHeight: 600,
     title: 'Kraube Kode', frame: false, titleBarStyle: 'hidden',
+    backgroundColor: '#00000000', hasShadow: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
