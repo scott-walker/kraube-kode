@@ -1,4 +1,4 @@
-import { ipcMain, dialog, type BrowserWindow } from 'electron';
+import { ipcMain, dialog, nativeImage, type BrowserWindow } from 'electron';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -78,7 +78,18 @@ export function registerClaudeHandlers(
     return filePath;
   });
 
-  ipcMain.handle('claude:list-sessions', () => claudePort.listSessions());
+  ipcMain.handle('claude:read-thumbnail', async (_event, filePath: string, size: number) => {
+    try {
+      const img = nativeImage.createFromPath(filePath);
+      if (img.isEmpty()) return null;
+      const resized = img.resize({ width: size, height: size });
+      return resized.toDataURL();
+    } catch {
+      return null;
+    }
+  });
+
+  ipcMain.handle('claude:list-sessions', (_event, limit?: number) => claudePort.listSessions(limit));
 
   ipcMain.handle('claude:supported-commands', () => claudePort.supportedCommands());
 
@@ -91,6 +102,15 @@ export function registerClaudeHandlers(
     return deleted;
   });
 
+  ipcMain.handle('claude:pick-files', async () => {
+    const win = getWindow();
+    const result = await dialog.showOpenDialog(win!, {
+      properties: ['openFile', 'multiSelections'],
+      title: 'Attach files',
+    });
+    return result.canceled ? [] : result.filePaths;
+  });
+
   ipcMain.handle('claude:new-session', async () => {
     const win = getWindow();
     const result = await dialog.showOpenDialog(win!, {
@@ -99,7 +119,18 @@ export function registerClaudeHandlers(
     });
     if (result.canceled || result.filePaths.length === 0) return null;
     const cwd = result.filePaths[0];
-    claudePort.newSession(cwd);
+    const switchResult = claudePort.newSession(cwd);
+    if (switchResult === 'instant') {
+      getWindow()?.webContents.send('claude:init-ready');
+    }
     return cwd;
+  });
+
+  ipcMain.handle('claude:resume-session', (_event, cwd: string) => {
+    const result = claudePort.resumeSession(cwd);
+    if (result === 'instant') {
+      getWindow()?.webContents.send('claude:init-ready');
+    }
+    return { instant: result === 'instant' };
   });
 }

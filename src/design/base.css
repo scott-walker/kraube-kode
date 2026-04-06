@@ -70,7 +70,6 @@ html, body, #root {
 ::-webkit-scrollbar { display: none; }
 
 button:hover { opacity: 0.85; }
-button:active { transform: scale(0.97); }
 
 /* ─── Theme Switch (instant, no transitions) ─── */
 

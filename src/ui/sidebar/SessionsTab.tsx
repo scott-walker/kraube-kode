@@ -1,7 +1,9 @@
-import { memo, useCallback, useMemo, useState } from 'react';
-import { Icons } from '../../icons';
-import { useSessions, useSessionsLoading, useActiveSessionId } from '../../state/selectors';
-import { newSession, selectSession, deleteSession } from '../../state/actions';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useSessions, useSessionsLoading, useSessionsLoadingMore,
+  useSessionsHasMore, useActiveSessionId,
+} from '../../state/selectors';
+import { selectSession, deleteSession, loadMoreSessions, navigateToManagement } from '../../state/actions';
 import { sessionInfoToUI } from '../../utils/format';
 import PulsingDots from '../inference/PulsingDots';
 import ContextMenu, { type ContextMenuItem } from '../shared/ContextMenu';
@@ -13,15 +15,31 @@ interface MenuState { x: number; y: number; sessionId: string }
 export default memo(function SessionsTab() {
   const sessions = useSessions();
   const sessionsLoading = useSessionsLoading();
+  const loadingMore = useSessionsLoadingMore();
+  const hasMore = useSessionsHasMore();
   const activeSessionId = useActiveSessionId();
   const [menu, setMenu] = useState<MenuState | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const uiSessions = useMemo(
     () => sessions
       .map(s => sessionInfoToUI(s, s.sessionId === activeSessionId)),
     [sessions, activeSessionId],
   );
+
+  // Infinite scroll — observe sentinel inside the nearest scrollable ancestor
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const scrollParent = el.closest('.sidebar__content') as HTMLElement | null;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) loadMoreSessions(); },
+      { root: scrollParent, rootMargin: '100px' },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleContextMenu = useCallback((e: React.MouseEvent, sessionId: string) => {
     e.preventDefault();
@@ -40,16 +58,13 @@ export default memo(function SessionsTab() {
 
   return (
     <div>
-      <div className="sessions-tab__sticky-header">
-        <button onClick={newSession} className="sessions-tab__new-btn">
-          <Icons.Plus size={16} />
-          New Session
-        </button>
-      </div>
       {sessionsLoading && uiSessions.length === 0 && (
         <div className="sessions-tab__loading">
           <PulsingDots />
         </div>
+      )}
+      {!sessionsLoading && uiSessions.length === 0 && (
+        <div className="sessions-tab__empty">No sessions yet</div>
       )}
       {uiSessions.map(s => (
         <button
@@ -68,6 +83,11 @@ export default memo(function SessionsTab() {
           </div>
         </button>
       ))}
+      {hasMore && uiSessions.length > 0 && (
+        <div ref={sentinelRef} className="sessions-tab__sentinel">
+          {loadingMore && <PulsingDots />}
+        </div>
+      )}
       {menu && (
         <ContextMenu x={menu.x} y={menu.y} items={menuItems} onClose={() => setMenu(null)} />
       )}

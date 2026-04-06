@@ -1,0 +1,218 @@
+/* ─── Sessions Manager ─── */
+
+.sessions-mgr__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8) 0;
+}
+
+.sessions-mgr {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sessions-mgr__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.sessions-mgr__search-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 180px;
+  max-width: 320px;
+  background: var(--bg-elevated);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  color: var(--fg-tertiary);
+  transition: border-color var(--transition-fast);
+}
+
+.sessions-mgr__search-wrap:focus-within {
+  border-color: var(--accent);
+  background: var(--bg-elevated);
+}
+
+.sessions-mgr__search {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--fg-primary);
+  font-size: var(--text-sm);
+  width: 100%;
+}
+
+.sessions-mgr__search::placeholder {
+  color: var(--fg-tertiary);
+}
+
+
+.sessions-mgr__select-all {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--fg-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sessions-mgr__delete-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.sessions-mgr__delete-btn:hover {
+  opacity: 0.85;
+}
+
+.sessions-mgr__progress {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+}
+
+.sessions-mgr__body {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: var(--space-8);
+}
+
+.sessions-mgr__empty {
+  text-align: center;
+  padding: var(--space-8) 0;
+  color: var(--fg-tertiary);
+  font-size: var(--text-sm);
+}
+
+/* ─── Group ─── */
+
+.session-group {
+  margin-bottom: var(--space-2);
+}
+
+.session-group__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.session-group__check {
+  display: flex;
+  cursor: pointer;
+  padding: var(--space-1);
+}
+
+.session-group__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-align: left;
+  padding: var(--space-1) 0;
+}
+
+.session-group__chevron {
+  display: inline-flex;
+  transition: transform var(--transition-fast);
+}
+
+.session-group__chevron.is-open {
+  transform: rotate(90deg);
+}
+
+.session-group__name {
+  font-family: var(--font-mono);
+}
+
+.session-group__count {
+  color: var(--fg-tertiary);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-xs);
+}
+
+/* ─── Row ─── */
+
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  margin-bottom: 2px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.session-row:hover {
+  background: var(--bg-elevated);
+}
+
+.session-row.is-selected {
+  background: var(--accent-dim);
+}
+
+.session-row__check {
+  display: flex;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.session-row__name {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--fg-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-row__branch {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--fg-tertiary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-row__time {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+
+.session-row__active-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  flex-shrink: 0;
+}

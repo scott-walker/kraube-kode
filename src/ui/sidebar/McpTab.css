@@ -107,7 +107,7 @@
 }
 
 .mcp-server__dot--connected  { background: var(--success); }
-.mcp-server__dot--failed     { background: var(--error); }
+.mcp-server__dot--failed     { background: var(--danger); }
 .mcp-server__dot--pending    { background: var(--warning); }
 .mcp-server__dot--needs-auth { background: var(--warning); }
 .mcp-server__dot--disabled   { background: var(--fg-tertiary); opacity: 0.5; }

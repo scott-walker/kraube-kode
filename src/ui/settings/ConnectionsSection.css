@@ -1,0 +1,131 @@
+/* ─── Connections list ─── */
+
+.conn-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.conn-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  border: 2px solid transparent;
+  transition: border-color var(--transition-fast);
+}
+
+.conn-card.is-active {
+  border-color: var(--accent);
+}
+
+.conn-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.conn-card__name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--fg-primary);
+}
+
+.conn-card__detail {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conn-card__actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.conn-card__btn {
+  padding: var(--space-2);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--fg-tertiary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.conn-card__btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--fg-primary);
+}
+
+.conn-card__btn--danger:hover {
+  color: var(--danger);
+}
+
+.conn-add-btn {
+  width: 100%;
+  padding: var(--space-3);
+  margin-top: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  border: 2px dashed var(--border);
+  cursor: pointer;
+  color: var(--fg-tertiary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: all var(--transition-fast);
+}
+
+.conn-add-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── Inline edit form ─── */
+
+.conn-edit {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--bg-primary);
+  border: 2px solid var(--accent);
+}
+
+.conn-edit__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: var(--space-4);
+}
+
+.conn-edit__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.conn-edit__btn {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: all var(--transition-fast);
+}
+
+.conn-edit__btn--cancel {
+  background: var(--bg-tertiary);
+  color: var(--fg-secondary);
+}
+
+.conn-edit__btn--save {
+  background: var(--accent);
+  color: #fff;
+}
+
+.conn-edit__btn--save:disabled {
+  opacity: 0.5;
+}

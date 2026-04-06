@@ -1,68 +1,15 @@
-/* ─── Settings Overlay ─── */
+/* ─── Settings section form elements ─── */
 
-.settings-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 200;
-  display: flex;
-  animation: fade-in var(--transition-base);
-}
-
-.settings-overlay__backdrop {
-  flex: 1;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
-}
-
-/* ─── Panel ─── */
-
-.settings-panel {
-  width: var(--settings-width);
-  height: 100%;
-  background: var(--bg-secondary);
-  padding: var(--space-7);
-  overflow-y: auto;
-  animation: slide-up var(--transition-slow);
-}
-
-.settings-panel__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-7);
-}
-
-.settings-panel__title {
+.settings-section__title {
   font-size: var(--text-xl);
   font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-6);
 }
-
-.settings-panel__close-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--fg-tertiary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-3);
-  margin: calc(-1 * var(--space-3));
-  border-radius: var(--radius-md);
-  transition: color var(--transition-fast), background var(--transition-fast);
-}
-
-.settings-panel__close-btn:hover {
-  color: var(--fg-primary);
-  background: var(--accent-dim);
-}
-
-/* ─── Form elements ─── */
 
 .settings-form__group {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding-bottom: var(--space-3);
 }
 
 .settings-form__label {
@@ -88,6 +35,37 @@
   border-color: var(--accent);
 }
 
+.settings-form__input-with-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.settings-form__input-with-action .settings-form__input {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-form__input-action {
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+  border: none;
+  cursor: pointer;
+  color: var(--fg-tertiary);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.settings-form__input-action:hover {
+  color: var(--fg-primary);
+  background: var(--accent-dim);
+}
+
 .settings-form__hint {
   font-size: var(--text-2xs);
   color: var(--fg-tertiary);
@@ -95,15 +73,12 @@
   display: block;
 }
 
-/* ─── Model selector ─── */
-
 /* ─── Permission modes ─── */
 
 .settings-perm-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  padding-bottom: var(--space-3);
 }
 
 .settings-perm-btn {
@@ -138,7 +113,6 @@
 .settings-theme-grid {
   display: flex;
   gap: var(--space-2);
-  padding-bottom: var(--space-2);
 }
 
 .settings-theme-btn {

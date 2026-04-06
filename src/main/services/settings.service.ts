@@ -1,20 +1,20 @@
 import type { IStoragePort } from '../../core/ports/storage.port';
-import type { AppSettings } from '../../core/types/settings';
-import { DEFAULT_SETTINGS } from '../../core/types/settings';
+import type { GlobalSettings } from '../../core/types/settings';
+import { DEFAULT_GLOBAL_SETTINGS } from '../../core/types/settings';
 
 export class SettingsService {
-  private cache: AppSettings;
+  private cache: GlobalSettings;
 
   constructor(private storage: IStoragePort) {
     this.cache = this.loadFromDb();
   }
 
-  get current(): Readonly<AppSettings> {
+  get current(): Readonly<GlobalSettings> {
     return this.cache;
   }
 
-  update(patch: Partial<AppSettings>): AppSettings {
-    const merged: AppSettings = { ...this.cache, ...patch };
+  update(patch: Partial<GlobalSettings>): GlobalSettings {
+    const merged: GlobalSettings = { ...this.cache, ...patch };
     for (const [key, value] of Object.entries(merged)) {
       this.storage.setSetting(key, value);
     }
@@ -22,15 +22,14 @@ export class SettingsService {
     return merged;
   }
 
-  private loadFromDb(): AppSettings {
+  private loadFromDb(): GlobalSettings {
+    const d = DEFAULT_GLOBAL_SETTINGS;
     return {
-      executable: this.storage.getSetting('executable', DEFAULT_SETTINGS.executable),
-      configDir: this.storage.getSetting('configDir', DEFAULT_SETTINGS.configDir),
-      permissionMode: this.storage.getSetting('permissionMode', DEFAULT_SETTINGS.permissionMode),
-      zoomFactor: Number(this.storage.getSetting('zoomFactor', String(DEFAULT_SETTINGS.zoomFactor))),
-      transcriptionProvider: this.storage.getSetting('transcriptionProvider', DEFAULT_SETTINGS.transcriptionProvider),
-      transcriptionApiKey: this.storage.getSetting('transcriptionApiKey', DEFAULT_SETTINGS.transcriptionApiKey),
-      transcriptionLanguage: this.storage.getSetting('transcriptionLanguage', DEFAULT_SETTINGS.transcriptionLanguage),
+      zoomFactor: Number(this.storage.getSetting('zoomFactor', String(d.zoomFactor))),
+      activeConnectionId: this.storage.getSetting('activeConnectionId', d.activeConnectionId),
+      transcriptionProvider: this.storage.getSetting('transcriptionProvider', d.transcriptionProvider),
+      transcriptionApiKey: this.storage.getSetting('transcriptionApiKey', d.transcriptionApiKey),
+      transcriptionLanguage: this.storage.getSetting('transcriptionLanguage', d.transcriptionLanguage),
     };
   }
 }

@@ -2,7 +2,7 @@
 
 .tool-call { --status-color: var(--fg-tertiary); }
 .tool-call[data-status="running"] { --status-color: var(--accent); }
-.tool-call[data-status="error"]   { --status-color: var(--error); }
+.tool-call[data-status="error"]   { --status-color: var(--danger); }
 
 .tool-call {
   display: flex;

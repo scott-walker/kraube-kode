@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '../state/store';
-import type { AppSettings } from '../types';
+import type { GlobalSettings } from '../types';
 
 export function useSettings() {
-  const [form, setForm] = useState<AppSettings>({
-    executable: 'claude', configDir: '', permissionMode: 'default', zoomFactor: 1.25,
+  const [form, setForm] = useState<GlobalSettings>({
+    zoomFactor: 1.25, activeConnectionId: '',
     transcriptionProvider: 'openai-whisper', transcriptionApiKey: '', transcriptionLanguage: '',
   });
   const [saving, setSaving] = useState(false);
@@ -12,7 +12,7 @@ export function useSettings() {
 
   useEffect(() => { window.settings.load().then(s => setForm(s)); }, []);
 
-  const update = (patch: Partial<AppSettings>) => {
+  const update = (patch: Partial<GlobalSettings>) => {
     setForm(prev => ({ ...prev, ...patch }));
     setDirty(true);
   };

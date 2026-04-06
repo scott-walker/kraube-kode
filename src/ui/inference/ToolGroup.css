@@ -21,7 +21,6 @@
 }
 
 .tool-group__toggle:hover { opacity: 0.8; }
-.tool-group__toggle:active { transform: none; }
 
 .tool-group__chevron {
   display: flex;

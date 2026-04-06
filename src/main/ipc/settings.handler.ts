@@ -5,14 +5,11 @@ import type { IStoragePort } from '../../core/ports/storage.port';
 export function registerSettingsHandlers(
   settingsService: SettingsService,
   storage: IStoragePort,
-  onSettingsChanged: () => void,
 ): void {
   ipcMain.handle('settings:load', () => settingsService.current);
 
   ipcMain.handle('settings:save', (_event, newSettings) => {
-    const result = settingsService.update(newSettings);
-    onSettingsChanged();
-    return result;
+    return settingsService.update(newSettings);
   });
 
   ipcMain.handle('settings:load-session-prefs', (_event, sessionId: string) =>

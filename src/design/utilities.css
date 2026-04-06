@@ -42,7 +42,7 @@
 .fg-tertiary { color: var(--fg-tertiary); }
 .fg-accent { color: var(--accent); }
 .fg-success { color: var(--success); }
-.fg-error { color: var(--error); }
+.fg-danger { color: var(--danger); }
 
 /* Surfaces */
 .surface-primary { background: var(--bg-primary); }

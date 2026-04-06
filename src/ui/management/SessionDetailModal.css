@@ -1,0 +1,126 @@
+/* ─── Session Detail Modal ─── */
+
+.session-modal__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in var(--transition-fast);
+}
+
+.session-modal {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  width: 520px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.session-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-6) var(--space-4);
+  flex-shrink: 0;
+}
+
+.session-modal__title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  margin: 0;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.session-modal__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-tertiary);
+  padding: var(--space-1);
+  margin: calc(-1 * var(--space-1));
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.session-modal__close:hover {
+  color: var(--fg-primary);
+  background: var(--bg-elevated);
+}
+
+.session-modal__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: 0 var(--space-6);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.session-modal__row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.session-modal__label {
+  font-size: var(--text-xs);
+  color: var(--fg-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.session-modal__value {
+  font-size: var(--text-sm);
+  color: var(--fg-primary);
+  word-break: break-all;
+}
+
+.session-modal__value--mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.session-modal__value--accent {
+  color: var(--success);
+  font-weight: var(--weight-medium);
+}
+
+.session-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-4) var(--space-6) var(--space-5);
+  flex-shrink: 0;
+}
+
+.session-modal__delete-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.session-modal__delete-btn:hover {
+  opacity: 0.85;
+}

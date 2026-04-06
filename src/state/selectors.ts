@@ -7,13 +7,25 @@ const selectIsStreaming = (s: AppState) => {
   return last?.role === 'assistant' && last?.streaming === true;
 };
 
+export const useConnections          = () => useStore(s => s.connections);
+export const useActiveConnectionId   = () => useStore(s => s.activeConnectionId);
+export const useActiveConnection     = () => {
+  const id = useStore(s => s.activeConnectionId);
+  const connections = useStore(s => s.connections);
+  return useMemo(() => connections.find(c => c.id === id) ?? null, [id, connections]);
+};
+export const useConnectionSetupRequired = () => useStore(s => s.connectionSetupRequired);
 export const useTheme           = () => useStore(s => s.theme);
 export const useIsStreaming      = () => useStore(selectIsStreaming);
 export const useSidebarOpen     = () => useStore(s => s.sidebarOpen);
-export const useSettingsOpen    = () => useStore(s => s.settingsOpen);
+export const useCurrentView     = () => useStore(s => s.currentView);
+export const useSettingsSection    = () => useStore(s => s.settingsSection);
+export const useManagementSection  = () => useStore(s => s.managementSection);
 export const useMessages        = () => useStore(s => s.messages);
 export const useSessions         = () => useStore(s => s.sessions);
 export const useSessionsLoading  = () => useStore(s => s.sessionsLoading);
+export const useSessionsLoadingMore = () => useStore(s => s.sessionsLoadingMore);
+export const useSessionsHasMore  = () => useStore(s => s.sessionsHasMore);
 export const useActiveSessionId  = () => useStore(s => s.activeSessionId);
 export const useMessagesLoading  = () => useStore(s => s.messagesLoading);
 export const useAttachedFiles   = () => useStore(s => s.attachedFiles);
@@ -48,3 +60,4 @@ export const useSdkMessage       = () => useStore(s => s.sdkMessage);
 export const useActiveCwd        = () => useStore(s => s.activeCwd);
 export const useRecordingState          = () => useStore(s => s.recordingState);
 export const useTranscriptionConfigured = () => useStore(s => s.transcriptionConfigured);
+export const useOverlayActive           = () => useStore(s => s.overlayCount > 0);

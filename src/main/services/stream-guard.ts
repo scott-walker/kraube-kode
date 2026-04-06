@@ -4,6 +4,7 @@ import type { IClaudePort } from '../../core/ports/claude.port';
 /**
  * Enforces one-active-stream rule.
  * If a new stream starts while one is active, the previous is aborted first.
+ * Tracks which pool key is streaming to prevent eviction of in-use instances.
  */
 export class StreamGuard {
   private active = false;
@@ -24,6 +25,10 @@ export class StreamGuard {
       }
     } finally {
       this.active = false;
+      // Clear streaming key on the adapter so the pool can evict this entry if needed
+      if ('clearStreamingKey' in this.claude) {
+        (this.claude as { clearStreamingKey: () => void }).clearStreamingKey();
+      }
     }
   }
 

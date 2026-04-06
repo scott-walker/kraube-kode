@@ -3,11 +3,11 @@
 .topbar {
   display: flex;
   align-items: center;
-  padding: var(--space-3) var(--space-6);
+  padding: 0 var(--space-6);
   gap: var(--space-6);
   flex-shrink: 0;
-  min-height: var(--topbar-height);
-  overflow: hidden;
+  height: var(--topbar-height);
+  overflow: visible;
   -webkit-app-region: drag;
 }
 
@@ -17,9 +17,16 @@
   cursor: pointer;
   color: var(--fg-tertiary);
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  transition: color var(--transition-base);
+  padding: 0;
+  transition: color var(--transition-fast);
   -webkit-app-region: no-drag;
+}
+
+.topbar__toggle-btn:hover {
+  color: var(--fg-primary);
 }
 
 .topbar__session {
@@ -35,7 +42,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  gap: 1px;
+  gap: 2px;
 }
 
 .topbar__session-name {
@@ -47,8 +54,15 @@
   max-width: 280px;
 }
 
+.topbar__session-path {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
 .topbar__session-cwd {
-  font-size: var(--text-2xs);
+  font-size: 9px;
   font-family: var(--font-mono);
   color: var(--fg-tertiary);
   overflow: hidden;
@@ -57,19 +71,21 @@
 }
 
 .topbar__session-project {
-  font-size: var(--text-xs);
+  font-size: 9px;
   font-family: var(--font-mono);
-  color: var(--fg-tertiary);
+  color: var(--accent);
   background: var(--bg-elevated);
-  padding: 2px var(--space-2);
+  padding: 1px var(--space-2);
   border-radius: var(--radius-xs);
 }
 
-.topbar__status {
+.topbar__connection {
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-  -webkit-app-region: no-drag;
+  gap: var(--space-2);
+  max-width: 220px;
 }
 
 .topbar__status-dot {
@@ -81,11 +97,6 @@
 
 .topbar__status-dot--streaming    { background: var(--warning); }
 .topbar__status-dot--ready        { background: var(--success); }
-.topbar__status-dot--initializing { background: var(--fg-tertiary); }
+.topbar__status-dot--initializing { background: var(--warning); }
 .topbar__status-dot--error        { background: var(--danger); }
 
-.topbar__status-label {
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  color: var(--fg-tertiary);
-}

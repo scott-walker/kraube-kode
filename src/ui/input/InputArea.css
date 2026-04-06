@@ -3,10 +3,12 @@
 .input-area {
   flex-shrink: 0;
   padding: 0 var(--space-6) var(--space-5);
+  position: relative;
 }
 
+
 .input-area__inner {
-  max-width: var(--chat-max-width);
+  max-width: calc(var(--chat-max-width) + 80px);
   margin: 0 auto;
 }
 
@@ -37,9 +39,7 @@
   gap: var(--space-1);
 }
 
-.input-area__file-input { display: none; }
-
-.input-area__attach-label {
+.input-area__attach-btn {
   width: 40px;
   height: 40px;
   display: flex;
@@ -50,9 +50,11 @@
   border-radius: var(--radius-xl);
   transition: color var(--transition-base), background var(--transition-base);
   flex-shrink: 0;
+  background: none;
+  border: none;
 }
 
-.input-area__attach-label:hover {
+.input-area__attach-btn:hover {
   color: var(--accent);
   background: var(--accent-dim);
 }
@@ -66,7 +68,7 @@
   cursor: pointer;
   color: var(--fg-tertiary);
   border-radius: var(--radius-md);
-  border: 1px solid color-mix(in srgb, var(--fg-tertiary) 25%, transparent);
+  border: 2px solid transparent;
   transition: color var(--transition-base), background var(--transition-base), border-color var(--transition-base);
   flex-shrink: 0;
   margin: 6px var(--space-1) 6px 0;

@@ -4,7 +4,9 @@
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,13 +14,12 @@
 }
 
 .confirm-dialog {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  border: none;
   border-radius: var(--radius-lg);
   padding: var(--space-6);
-  min-width: 320px;
-  max-width: 420px;
-  box-shadow: var(--shadow-xl);
+  min-width: 280px;
+  max-width: 360px;
 }
 
 .confirm-dialog__title {
@@ -69,7 +70,7 @@
 }
 
 .confirm-dialog__btn--danger {
-  background: var(--error);
+  background: var(--danger);
   color: #fff;
 }
 

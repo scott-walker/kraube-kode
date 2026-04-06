@@ -97,6 +97,14 @@ export default memo(function InputArea() {
   }, [recordingState]);
 
   useEffect(() => {
+    const isInputElement = (el: Element | null): boolean => {
+      if (!el) return false;
+      const tag = el.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+      if ((el as HTMLElement).isContentEditable) return true;
+      return false;
+    };
+
     const handleGlobalKey = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === '/') {
         e.preventDefault();
@@ -105,6 +113,15 @@ export default memo(function InputArea() {
       if (e.key === 'Escape' && recordingState === 'recording') {
         e.preventDefault();
         cancelRecording();
+      }
+
+      // Auto-focus chat input on printable key press
+      if (
+        e.key.length === 1
+        && !e.ctrlKey && !e.metaKey && !e.altKey
+        && !isInputElement(document.activeElement)
+      ) {
+        inputRef.current?.focus();
       }
     };
     window.addEventListener('keydown', handleGlobalKey);
@@ -173,20 +190,21 @@ export default memo(function InputArea() {
           </div>
         )}
         <div className="input-area__box" ref={boxRef}>
-          {showPalette && (
-            <CommandPalette
-              filter={slashFilter}
-              onSelect={handleSelectCommand}
-              onClose={() => setCmdOpen(false)}
-              anchorRef={boxRef}
-            />
-          )}
-          <div className="input-area__row">
-            <label className="input-area__attach-label">
+            {showPalette && (
+              <CommandPalette
+                filter={slashFilter}
+                onSelect={handleSelectCommand}
+                onClose={() => setCmdOpen(false)}
+                anchorRef={boxRef}
+              />
+            )}
+            <div className="input-area__row">
+              <button className="input-area__attach-btn" onClick={async () => {
+              const paths = await window.claude.pickFiles();
+              if (paths.length > 0) attachFiles(paths);
+            }}>
               <Icons.Paperclip size={18} />
-              <input type="file" multiple className="input-area__file-input"
-                onChange={e => attachFiles(Array.from(e.target.files || []).map(f => (f as File & { path: string }).path || f.name))} />
-            </label>
+            </button>
             <Tooltip text="Commands">
               <button onClick={handleSlashClick} className={`input-area__slash-btn${text.startsWith('/') ? ' is-active' : ''}`}>
                 <Icons.Slash size={14} />

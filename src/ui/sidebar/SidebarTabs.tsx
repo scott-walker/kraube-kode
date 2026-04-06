@@ -1,12 +1,11 @@
 import { memo } from 'react';
 import { Icons } from '../../icons';
 
-export type SidebarTab = 'sessions' | 'mcp' | 'memory';
+export type SidebarTab = 'sessions' | 'management';
 
 const TABS: { key: SidebarTab; icon: React.ReactNode; label: string }[] = [
-  { key: 'sessions', icon: <Icons.Terminal size={14} />, label: 'Sessions' },
-  { key: 'mcp',      icon: <Icons.Plug size={14} />,    label: 'MCP' },
-  { key: 'memory',   icon: <Icons.Memory size={14} />,  label: 'Memory' },
+  { key: 'sessions',   icon: <Icons.Terminal size={14} />, label: 'Chats' },
+  { key: 'management', icon: <Icons.Layers size={14} />,   label: 'Management' },
 ];
 
 interface Props {

@@ -1,0 +1,60 @@
+/* ─── Connection Setup Modal ─── */
+
+.conn-setup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in var(--transition-fast);
+}
+
+.conn-setup {
+  background: var(--bg-primary);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  width: 480px;
+  max-width: 90vw;
+}
+
+.conn-setup__title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-1);
+}
+
+.conn-setup__subtitle {
+  font-size: var(--text-sm);
+  color: var(--fg-tertiary);
+  margin-bottom: var(--space-6);
+}
+
+.conn-setup__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: var(--space-6);
+}
+
+.conn-setup__submit {
+  width: 100%;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  transition: opacity var(--transition-base);
+}
+
+.conn-setup__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

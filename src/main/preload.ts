@@ -1,24 +1,35 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, webUtils } from 'electron';
 
 contextBridge.exposeInMainWorld('windowControls', {
   minimize: () => ipcRenderer.send('window:minimize'),
   maximize: () => ipcRenderer.send('window:maximize'),
   close: () => ipcRenderer.send('window:close'),
   isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
+  onConfirmClose: (cb: () => void) => {
+    const handler = () => cb();
+    ipcRenderer.on('window:confirm-close', handler);
+    return () => ipcRenderer.removeListener('window:confirm-close', handler);
+  },
+  confirmCloseResponse: (confirmed: boolean) => ipcRenderer.send('window:confirm-close-response', confirmed),
 });
 
 contextBridge.exposeInMainWorld('claude', {
   send: (prompt: string, files?: string[], options?: Record<string, string>) => ipcRenderer.send('claude:send', prompt, files, options),
   abort: () => ipcRenderer.send('claude:abort'),
   getSdkStatus: () => ipcRenderer.invoke('claude:get-sdk-status'),
-  listSessions: () => ipcRenderer.invoke('claude:list-sessions'),
+  listSessions: (limit?: number) => ipcRenderer.invoke('claude:list-sessions', limit),
   getSessionMessages: (sessionId: string) => ipcRenderer.invoke('claude:get-session-messages', sessionId),
   deleteSession: (sessionId: string) => ipcRenderer.invoke('claude:delete-session', sessionId) as Promise<boolean>,
   newSession: () => ipcRenderer.invoke('claude:new-session') as Promise<string | null>,
+  resumeSession: (cwd: string) => ipcRenderer.invoke('claude:resume-session', cwd) as Promise<{ instant: boolean }>,
   supportedCommands: () => ipcRenderer.invoke('claude:supported-commands'),
   getCwd: () => ipcRenderer.invoke('claude:get-cwd') as Promise<string>,
   saveTempImage: (bytes: Uint8Array, mimeType: string) =>
     ipcRenderer.invoke('claude:save-temp-image', bytes, mimeType) as Promise<string>,
+  readThumbnail: (filePath: string, size: number) =>
+    ipcRenderer.invoke('claude:read-thumbnail', filePath, size) as Promise<string | null>,
+  pickFiles: () => ipcRenderer.invoke('claude:pick-files') as Promise<string[]>,
+  getPathForFile: (file: File) => webUtils.getPathForFile(file),
 
   onEvent: (cb: (event: unknown, data: unknown) => void) => {
     ipcRenderer.on('claude:event', cb);
@@ -58,6 +69,24 @@ contextBridge.exposeInMainWorld('settings', {
     ipcRenderer.invoke('settings:save-session-pref', sessionId, key, value),
   deleteSessionPrefs: (sessionId: string) => ipcRenderer.invoke('settings:delete-session-prefs', sessionId),
 });
+
+contextBridge.exposeInMainWorld('connection', {
+  list: () => ipcRenderer.invoke('connection:list'),
+  create: (data: unknown) => ipcRenderer.invoke('connection:create', data),
+  update: (conn: unknown) => ipcRenderer.invoke('connection:update', conn),
+  delete: (id: string) => ipcRenderer.invoke('connection:delete', id),
+  setActive: (id: string) => ipcRenderer.invoke('connection:set-active', id) as Promise<{ instant: boolean }>,
+  getActive: () => ipcRenderer.invoke('connection:get-active'),
+  pickDirectory: () => ipcRenderer.invoke('connection:pick-directory') as Promise<string | null>,
+});
+
+const ZOOM_STEP = 0.05;
+window.addEventListener('wheel', (e) => {
+  if (!e.ctrlKey && !e.metaKey) return;
+  e.preventDefault();
+  const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+  ipcRenderer.send('zoom:apply', delta);
+}, { passive: false });
 
 contextBridge.exposeInMainWorld('transcription', {
   transcribe: (audioBytes: Uint8Array, mimeType: string) =>

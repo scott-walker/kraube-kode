@@ -1,12 +1,16 @@
 import { memo } from 'react';
 import { Icons } from '../../icons';
 import { useMemories } from '../../state/selectors';
+import { navigateToManagement } from '../../state/actions';
 import './MemoryTab.css';
 
 export default memo(function MemoryTab() {
   const memories = useMemories();
   return (
     <div>
+      <button className="sessions-tab__manage" onClick={() => navigateToManagement('memory')}>
+        Manage all memory
+      </button>
       <div className="memory-tab__section-label">Project Memory</div>
       {memories.map((m, i) => (
         <div key={i} className="memory-item">

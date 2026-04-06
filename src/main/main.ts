@@ -1,12 +1,14 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { SqliteAdapter } from './adapters/sqlite.adapter';
 import { ClaudeConnectorAdapter } from './adapters/kraube-konnektor.adapter';
 import { SettingsService } from './services/settings.service';
+import { ConnectionService } from './services/connection.service';
 import { StreamGuard } from './services/stream-guard';
-import { DEFAULT_SETTINGS } from '../core/types/settings';
+import { DEFAULT_GLOBAL_SETTINGS } from '../core/types/settings';
 import { registerSettingsHandlers } from './ipc/settings.handler';
+import { registerConnectionHandlers } from './ipc/connection.handler';
 import { registerClaudeHandlers } from './ipc/claude.handler';
 import { registerWindowHandlers } from './ipc/window.handler';
 import { registerTranscriptionHandlers } from './ipc/transcription.handler';
@@ -23,7 +25,12 @@ const storage = new SqliteAdapter(app.getPath('userData'));
 storage.open();
 
 const settingsService = new SettingsService(storage);
-const claudeAdapter = new ClaudeConnectorAdapter(settingsService.current);
+const connectionService = new ConnectionService(storage);
+const activeConnection = connectionService.getActive();
+const claudeAdapter = new ClaudeConnectorAdapter(
+  activeConnection,
+  (id: string) => connectionService.get(id),
+);
 const streamGuard = new StreamGuard(claudeAdapter);
 
 const transcriptionAdapters: Record<string, ITranscriptionPort> = {
@@ -38,7 +45,8 @@ let mainWindow: BrowserWindow | null = null;
 const getWindow = () => mainWindow;
 
 // ── IPC ──
-registerSettingsHandlers(settingsService, storage, () => claudeAdapter.reinit(settingsService.current));
+registerSettingsHandlers(settingsService, storage);
+registerConnectionHandlers(connectionService, claudeAdapter, getWindow);
 registerClaudeHandlers(getWindow, claudeAdapter, streamGuard);
 registerWindowHandlers(getWindow, claudeAdapter);
 registerTranscriptionHandlers(getTranscriptionAdapter, settingsService);
@@ -53,7 +61,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      sandbox: true,
+      sandbox: false,
     },
   });
 
@@ -70,6 +78,21 @@ function createWindow() {
     else if (claudeAdapter.initError) mainWindow.webContents.send('claude:init-error', claudeAdapter.initError);
   });
 
+  let forceClose = false;
+  mainWindow.on('close', (e) => {
+    if (forceClose) return;
+    e.preventDefault();
+    mainWindow.webContents.send('window:confirm-close');
+  });
+
+  ipcMain.on('window:confirm-close-response', (_e, confirmed: boolean) => {
+    if (confirmed) {
+      forceClose = true;
+      claudeAdapter.close();
+      mainWindow?.close();
+    }
+  });
+
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   else mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
 }
@@ -80,13 +103,19 @@ app.on('ready', () => {
   claudeAdapter.onInitStage((info) => mainWindow?.webContents.send('claude:init-stage', info));
   claudeAdapter.onInitReady(() => mainWindow?.webContents.send('claude:init-ready'));
   claudeAdapter.onInitError((msg) => mainWindow?.webContents.send('claude:init-error', msg));
-  claudeAdapter.init().catch(() => {});
+  if (activeConnection) claudeAdapter.init().catch(() => {});
 
   const applyZoom = (factor: number) => {
     const clamped = Math.round(Math.max(0.5, Math.min(3, factor)) * 100) / 100;
     mainWindow?.webContents.setZoomFactor(clamped);
     settingsService.update({ zoomFactor: clamped });
   };
+
+  ipcMain.on('zoom:apply', (_event, delta: number) => {
+    const wc = mainWindow?.webContents;
+    if (!wc) return;
+    applyZoom(wc.getZoomFactor() + delta);
+  });
 
   mainWindow.webContents.on('before-input-event', (_event, input) => {
     if (!input.control && !input.meta) return;
@@ -102,7 +131,7 @@ app.on('ready', () => {
       applyZoom(wc.getZoomFactor() - ZOOM_STEP);
     } else if (input.key === '0') {
       _event.preventDefault();
-      applyZoom(DEFAULT_SETTINGS.zoomFactor);
+      applyZoom(DEFAULT_GLOBAL_SETTINGS.zoomFactor);
     }
   });
 });

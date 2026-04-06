@@ -2,6 +2,7 @@ import { memo, useState } from 'react';
 import { Icons } from '../../icons';
 import { useMcpServersByScope, useMcpLoading, useMcpSelectedServer, useSdkStatus } from '../../state/selectors';
 import { refreshMcpServers, selectMcpServer } from '../../state/mcp-actions';
+import { navigateToManagement } from '../../state/actions';
 import McpServerDetail from './McpServerDetail';
 import McpAddServerForm from './McpAddServerForm';
 import Tooltip from '../shared/Tooltip';
@@ -60,6 +61,9 @@ export default memo(function McpTab() {
 
   return (
     <div>
+      <button className="sessions-tab__manage" onClick={() => navigateToManagement('mcp')}>
+        Manage all servers
+      </button>
       <div className="mcp-tab__header">
         <span className="mcp-tab__title">MCP Servers</span>
         <Tooltip text="Add MCP server">

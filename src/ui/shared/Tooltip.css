@@ -5,7 +5,7 @@
 
 .tooltip-bubble {
   position: fixed;
-  transform: translateY(-100%);
+  transform: translateY(-50%);
   padding: var(--space-2) var(--space-3);
   background: var(--bg-tooltip, #181B20);
   border: none;
@@ -31,7 +31,20 @@
   font-size: var(--text-2xs);
 }
 
+.tooltip-bubble--left {
+  transform: translateY(-50%);
+}
+
 @keyframes tooltip-in {
-  from { opacity: 0; transform: translateY(calc(-100% + 4px)); }
-  to   { opacity: 1; transform: translateY(-100%); }
+  from { opacity: 0; transform: translateY(-50%) translateX(-4px); }
+  to   { opacity: 1; transform: translateY(-50%); }
+}
+
+@keyframes tooltip-in-left {
+  from { opacity: 0; transform: translateY(-50%) translateX(4px); }
+  to   { opacity: 1; transform: translateY(-50%); }
+}
+
+.tooltip-bubble--left {
+  animation-name: tooltip-in-left;
 }

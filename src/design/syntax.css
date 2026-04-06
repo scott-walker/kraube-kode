@@ -1,0 +1,64 @@
+/* ─── Syntax Highlighting (highlight.js class-based) ─── */
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-meta .hljs-keyword { color: var(--syntax-keyword); }
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp { color: var(--syntax-string); }
+
+.hljs-number,
+.hljs-literal { color: var(--syntax-number); }
+
+.hljs-comment { color: var(--syntax-comment); font-style: italic; }
+
+.hljs-title,
+.hljs-title\.function_,
+.hljs-section { color: var(--syntax-function); }
+
+.hljs-type,
+.hljs-built_in,
+.hljs-title\.class_ { color: var(--syntax-type); }
+
+.hljs-variable,
+.hljs-template-variable { color: var(--syntax-variable); }
+
+.hljs-attr,
+.hljs-attribute { color: var(--syntax-attribute); }
+
+.hljs-tag { color: var(--syntax-tag); }
+
+.hljs-name { color: var(--syntax-tag); }
+
+.hljs-symbol,
+.hljs-bullet { color: var(--syntax-number); }
+
+.hljs-params { color: var(--syntax-variable); }
+
+.hljs-operator,
+.hljs-punctuation { color: var(--syntax-operator); }
+
+.hljs-property { color: var(--syntax-property); }
+
+.hljs-meta,
+.hljs-meta .hljs-string { color: var(--syntax-attribute); }
+
+.hljs-addition { color: var(--syntax-string); }
+.hljs-deletion { color: var(--syntax-tag); }
+
+/* ─── Diff block: always dark syntax (bg-diff is dark in both themes) ─── */
+
+.diff-block__pre {
+  --syntax-keyword: #C678DD;
+  --syntax-string: #98C379;
+  --syntax-number: #D19A66;
+  --syntax-comment: #5C6370;
+  --syntax-function: #61AFEF;
+  --syntax-type: #E5C07B;
+  --syntax-variable: #ABB2BF;
+  --syntax-attribute: #D19A66;
+  --syntax-tag: #E06C75;
+  --syntax-operator: #56B6C2;
+  --syntax-property: #ABB2BF;
+}

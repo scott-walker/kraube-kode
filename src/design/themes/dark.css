@@ -3,7 +3,7 @@
 [data-theme="dark"] {
   --bg-primary: #25282F;
   --bg-secondary: #1E2127;
-  --bg-elevated: #2C3039;
+  --bg-elevated: #1E2128;
   --bg-tertiary: #353A44;
   --bg-code: #1B1E24;
   --bg-code-header: #22252C;
@@ -16,7 +16,7 @@
   --accent-dim: rgba(135, 152, 195, 0.14);
   --accent-medium: rgba(135, 152, 195, 0.28);
   --success: #4ade80;
-  --error: #f87171;
+  --danger: #f87171;
   --warning: #fbbf24;
   --info: #60a5fa;
   --bg-tooltip: #181B20;
@@ -24,7 +24,20 @@
   --fg-diff: #9BA2B5;
   --fg-diff-add: #8798C3;
   --fg-diff-remove: #505868;
+  --overlay-bg: rgba(135, 152, 195, 0.35);
   --border: #2E333D;
+  --border-table: #1E2128;
+  --syntax-keyword: #C678DD;
+  --syntax-string: #98C379;
+  --syntax-number: #D19A66;
+  --syntax-comment: #5C6370;
+  --syntax-function: #61AFEF;
+  --syntax-type: #E5C07B;
+  --syntax-variable: #ABB2BF;
+  --syntax-attribute: #D19A66;
+  --syntax-tag: #E06C75;
+  --syntax-operator: #56B6C2;
+  --syntax-property: #ABB2BF;
   --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
   --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.12);

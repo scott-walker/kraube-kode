@@ -6,7 +6,7 @@
   "main": ".vite/build/main.js",
   "private": true,
   "scripts": {
-    "start": "node -e \"require('fs').rmSync('.vite/build', {recursive:true, force:true})\" && electron-forge start",
+    "start": "node -e \"require('fs').rmSync('.vite/build', {recursive:true, force:true}); require('fs').mkdirSync('logs', {recursive:true})\" && electron-forge start 2>&1 | tee logs/main-$(date +%Y%m%d-%H%M%S).log",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -50,6 +50,7 @@
     "better-sqlite3": "^12.8.0",
     "dompurify": "^3.3.3",
     "electron-squirrel-startup": "^1.0.1",
+    "highlight.js": "^11.11.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.1.0",

@@ -1,13 +1,20 @@
 import { create } from 'zustand';
-import type { Message, McpServer, SessionInfo } from '../types';
+import type { Message, McpServer, SessionInfo, Connection } from '../types';
 import type { Theme } from '../theme';
 
 export type SdkStatus = 'initializing' | 'ready' | 'error';
 export type RecordingState = 'idle' | 'recording' | 'transcribing';
 export type ToolbarPermission = 'default' | 'acceptEdits' | 'plan';
 export type ToolbarEffort = 'low' | 'medium' | 'high' | 'max';
+export type AppView = 'chat' | 'settings' | 'management';
+export type SettingsSection = 'connections' | 'permissions' | 'voice' | 'appearance';
+export type ManagementSection = 'sessions' | 'mcp' | 'memory';
 
 export interface AppState {
+  // Connections
+  connections: Connection[];
+  activeConnectionId: string;
+  connectionSetupRequired: boolean;
   // SDK
   sdkStatus: SdkStatus;
   sdkMessage: string;
@@ -15,6 +22,9 @@ export interface AppState {
   // Sessions
   sessions: SessionInfo[];
   sessionsLoading: boolean;
+  sessionsLoadingMore: boolean;
+  sessionsHasMore: boolean;
+  sessionsLimit: number;
   activeSessionId: string;
   // Chat
   messages: Message[];
@@ -25,7 +35,9 @@ export interface AppState {
   // UI
   theme: Theme;
   sidebarOpen: boolean;
-  settingsOpen: boolean;
+  currentView: AppView;
+  settingsSection: SettingsSection;
+  managementSection: ManagementSection;
   attachedFiles: string[];
   dragOver: boolean;
   // Toolbar (per-session, persisted in session_prefs)
@@ -36,16 +48,24 @@ export interface AppState {
   mcpServers: McpServer[];
   mcpLoading: boolean;
   mcpSelectedServer: string | null;
+  // Overlays
+  overlayCount: number;
   // Misc
   memories: string[];
 }
 
 export const useStore = create<AppState>(() => ({
+  connections: [],
+  activeConnectionId: '',
+  connectionSetupRequired: false,
   sdkStatus: 'initializing',
   sdkMessage: 'Warming up SDK session…',
   activeCwd: '',
   sessions: [],
   sessionsLoading: true,
+  sessionsLoadingMore: false,
+  sessionsHasMore: true,
+  sessionsLimit: 30,
   activeSessionId: '',
   messages: [],
   messagesLoading: false,
@@ -53,7 +73,9 @@ export const useStore = create<AppState>(() => ({
   transcriptionConfigured: false,
   theme: 'dark',
   sidebarOpen: true,
-  settingsOpen: false,
+  currentView: 'chat',
+  settingsSection: 'connections',
+  managementSection: 'sessions',
   attachedFiles: [],
   dragOver: false,
   toolbarModel: 'sonnet',
@@ -62,5 +84,6 @@ export const useStore = create<AppState>(() => ({
   mcpServers: [],
   mcpLoading: false,
   mcpSelectedServer: null,
+  overlayCount: 0,
   memories: [],
 }));

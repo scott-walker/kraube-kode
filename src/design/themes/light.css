@@ -17,7 +17,7 @@
   --accent-dim: rgba(107, 125, 176, 0.08);
   --accent-medium: rgba(107, 125, 176, 0.18);
   --success: #16a34a;
-  --error: #dc2626;
+  --danger: #dc2626;
   --warning: #d97706;
   --info: #2563eb;
   --bg-tooltip: #2B3044;
@@ -25,7 +25,19 @@
   --fg-diff: #D5D9E5;
   --fg-diff-add: #A8B4E0;
   --fg-diff-remove: #6B7290;
+  --overlay-bg: rgba(43, 48, 68, 0.68);
   --border: #D9DCE7;
+  --syntax-keyword: #A626A4;
+  --syntax-string: #50A14F;
+  --syntax-number: #986801;
+  --syntax-comment: #A0A1A7;
+  --syntax-function: #4078F2;
+  --syntax-type: #C18401;
+  --syntax-variable: #383A42;
+  --syntax-attribute: #986801;
+  --syntax-tag: #E45649;
+  --syntax-operator: #0184BC;
+  --syntax-property: #4078F2;
   --shadow-sm: 0 1px 4px rgba(43, 48, 68, 0.07);
   --shadow-md: 0 4px 16px rgba(43, 48, 68, 0.09);
   --shadow-lg: 0 8px 28px rgba(43, 48, 68, 0.11);

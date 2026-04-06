@@ -60,6 +60,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-base);
   background: var(--bg-elevated);
+  color: var(--accent);
   padding: 2px 12px;
   border-radius: var(--radius-xs);
   cursor: pointer;
@@ -97,6 +98,7 @@
   padding: var(--space-3);
   overflow-x: auto;
   margin: var(--space-2) 0;
+  cursor: pointer;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
@@ -159,7 +161,7 @@
 
 .message__text th,
 .message__text td {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-table, var(--border));
   padding: var(--space-2) var(--space-3);
   text-align: left;
 }
@@ -206,4 +208,4 @@
 }
 
 .message__summary-stat--positive { color: var(--success); }
-.message__summary-stat--negative { color: var(--error); }
+.message__summary-stat--negative { color: var(--danger); }

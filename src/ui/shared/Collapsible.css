@@ -21,7 +21,6 @@
 }
 
 .collapsible__trigger:hover { opacity: 1; }
-.collapsible__trigger:active { transform: none; }
 .collapsible__trigger--accent { color: var(--accent); }
 
 .collapsible__chevron {

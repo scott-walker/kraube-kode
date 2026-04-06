@@ -1,5 +1,5 @@
 import { useStore } from './store';
-import type { ToolbarPermission, ToolbarEffort } from './store';
+import type { ToolbarPermission, ToolbarEffort, SettingsSection, ManagementSection } from './store';
 import { streamBuffer } from './stream-processor';
 import { mapSessionMessages } from '../utils/session-message-mapper';
 import type { Message, MessageBlock } from '../types';
@@ -22,12 +22,39 @@ export function setSidebarOpen(open: boolean) {
   useStore.setState({ sidebarOpen: open });
 }
 
-export function setSettingsOpen(open: boolean) {
-  useStore.setState({ settingsOpen: open });
+export function navigateToSettings() {
+  useStore.setState({ currentView: 'settings' });
+}
+
+export function navigateToChat() {
+  useStore.setState({ currentView: 'chat' });
+}
+
+export function setSettingsSection(section: SettingsSection) {
+  useStore.setState({ settingsSection: section });
+}
+
+export function navigateToManagement(section?: ManagementSection) {
+  useStore.setState({
+    currentView: 'management',
+    ...(section ? { managementSection: section } : {}),
+  });
+}
+
+export function setManagementSection(section: ManagementSection) {
+  useStore.setState({ managementSection: section });
 }
 
 export function setDragOver(over: boolean) {
   useStore.setState({ dragOver: over });
+}
+
+export function pushOverlay() {
+  useStore.setState(s => ({ overlayCount: s.overlayCount + 1 }));
+}
+
+export function popOverlay() {
+  useStore.setState(s => ({ overlayCount: Math.max(0, s.overlayCount - 1) }));
 }
 
 // ─── Toolbar ───
@@ -101,6 +128,27 @@ export function removeFile(index: number) {
 
 // ─── Sessions ───
 
+const PAGE_SIZE = 30;
+
+export async function loadMoreSessions() {
+  const { sessionsLoadingMore, sessionsHasMore, sessionsLimit } = useStore.getState();
+  if (sessionsLoadingMore || !sessionsHasMore) return;
+
+  const newLimit = sessionsLimit + PAGE_SIZE;
+  useStore.setState({ sessionsLoadingMore: true, sessionsLimit: newLimit });
+
+  try {
+    const sessions = await window.claude.listSessions(newLimit);
+    useStore.setState({
+      sessions,
+      sessionsLoadingMore: false,
+      sessionsHasMore: sessions.length >= newLimit,
+    });
+  } catch {
+    useStore.setState({ sessionsLoadingMore: false });
+  }
+}
+
 export async function newSession() {
   const cwd = await window.claude.newSession();
   if (!cwd) return; // user cancelled dialog
@@ -115,18 +163,35 @@ export async function newSession() {
   });
 }
 
-function extractCwdFromRaw(raw: unknown[]): string | undefined {
-  for (const item of raw) {
-    const cwd = (item as Record<string, unknown>).cwd;
-    if (typeof cwd === 'string' && cwd) return cwd;
-  }
-  return undefined;
-}
+let resumeTimer: ReturnType<typeof setTimeout> | undefined;
 
 export async function selectSession(sessionId: string) {
-  if (sessionId === useStore.getState().activeSessionId) return;
+  const state = useStore.getState();
+  if (sessionId === state.activeSessionId) return;
+
+  const session = state.sessions.find(s => s.sessionId === sessionId);
+  const sessionCwd = session?.cwd;
+
   streamBuffer.clear();
-  useStore.setState({ activeSessionId: sessionId, messages: [], messagesLoading: true });
+  clearTimeout(resumeTimer);
+
+  useStore.setState({
+    activeSessionId: sessionId,
+    messages: [],
+    messagesLoading: true,
+    currentView: 'chat',
+    ...(sessionCwd ? { activeCwd: sessionCwd } : {}),
+  });
+
+  if (sessionCwd) {
+    resumeTimer = setTimeout(async () => {
+      if (useStore.getState().activeSessionId !== sessionId) return;
+      const { instant } = await window.claude.resumeSession(sessionCwd);
+      if (!instant && useStore.getState().activeSessionId === sessionId) {
+        useStore.setState({ sdkStatus: 'initializing', sdkMessage: 'Switching project…' });
+      }
+    }, 150);
+  }
 
   try {
     const [raw] = await Promise.all([
@@ -135,8 +200,7 @@ export async function selectSession(sessionId: string) {
     ]);
     if (useStore.getState().activeSessionId !== sessionId) return;
     const messages = mapSessionMessages(raw);
-    const cwd = extractCwdFromRaw(raw);
-    useStore.setState({ messages, messagesLoading: false, ...(cwd ? { activeCwd: cwd } : {}) });
+    useStore.setState({ messages, messagesLoading: false });
   } catch {
     useStore.setState({ messagesLoading: false });
   }

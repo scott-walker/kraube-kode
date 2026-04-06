@@ -1,4 +1,4 @@
-export type McpStatus = 'connected' | 'failed' | 'needs-auth' | 'pending' | 'disabled';
+export type McpStatus = 'connected' | 'failed' | 'error' | 'needs-auth' | 'pending' | 'disabled';
 export type McpScope = 'project' | 'global' | 'marketplace';
 export type McpTransportType = 'stdio' | 'http' | 'sse';
 

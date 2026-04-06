@@ -1,0 +1,15 @@
+/* ─── Management Page Layout ─── */
+
+.management-page {
+  display: flex;
+  height: 100%;
+  animation: fade-in var(--transition-base);
+}
+
+.management-page__content {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 var(--space-6);
+  display: flex;
+  flex-direction: column;
+}

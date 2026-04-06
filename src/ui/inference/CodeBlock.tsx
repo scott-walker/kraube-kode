@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Icons } from '../../icons';
+import { highlightCode } from '../../services/syntax';
 import './CodeBlock.css';
 
 interface Props {
@@ -15,6 +16,9 @@ export default function CodeBlock({ code, language, filename }: Props) {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const highlighted = useMemo(() => highlightCode(code, language), [code, language]);
+
   return (
     <div className="code-block">
       <div className="code-block__header">
@@ -29,7 +33,7 @@ export default function CodeBlock({ code, language, filename }: Props) {
           {copied ? <Icons.Check size={14} /> : <Icons.Copy size={14} />}
         </button>
       </div>
-      <pre className="code-block__pre">{code}</pre>
+      <pre className="code-block__pre" dangerouslySetInnerHTML={{ __html: highlighted }} />
     </div>
   );
 }

@@ -1,0 +1,24 @@
+.new-session-btn {
+  padding: var(--space-1);
+  background: transparent;
+  border: 2px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  -webkit-app-region: no-drag;
+}
+
+.new-session-btn svg {
+  stroke-width: 3;
+}
+
+.new-session-btn:hover {
+  transform: scale(1.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 40%, transparent);
+}

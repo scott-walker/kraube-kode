@@ -29,7 +29,6 @@
 }
 
 .diff-block__header:hover { opacity: 0.8; }
-.diff-block__header:active { transform: none; }
 
 .diff-block__chevron {
   display: flex;
@@ -93,13 +92,23 @@
 .diff-block__pre:hover::-webkit-scrollbar-thumb { background: var(--accent); }
 
 .diff-line-add {
-  color: var(--fg-diff-add);
+  background: rgba(98, 150, 85, 0.10);
 }
 
 .diff-line-remove {
-  color: var(--fg-diff-remove);
+  background: rgba(224, 108, 117, 0.08);
+  opacity: 0.5;
 }
 
 .diff-line-context {
-  color: var(--fg-diff);
+  opacity: 0.6;
 }
+
+.diff-line__prefix {
+  color: var(--fg-diff);
+  user-select: none;
+  margin-right: 2px;
+}
+
+.diff-line-add .diff-line__prefix { color: var(--fg-diff-add); }
+.diff-line-remove .diff-line__prefix { color: var(--fg-diff-remove); }

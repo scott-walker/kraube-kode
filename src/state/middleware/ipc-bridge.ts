@@ -1,16 +1,26 @@
 import { useStore } from '../store';
 import { processEvent, streamBuffer } from '../stream-processor';
 import { persistCurrentToolbarPrefs } from '../actions';
+import { loadConnections } from '../connection-actions';
 import type { StreamEvent } from '../../types';
 
 export function initIpcBridge(): () => void {
+  // Load connections first — determines if setup is required
+  loadConnections().then(() => {
+    const { connectionSetupRequired } = useStore.getState();
+    if (connectionSetupRequired) {
+      useStore.setState({ sdkStatus: 'initializing', sdkMessage: '', sessionsLoading: false });
+    }
+  }).catch(() => {});
+
   const cleanupReady = window.claude.onInitReady(() => {
+    const limit = useStore.getState().sessionsLimit;
     useStore.setState({ sdkStatus: 'ready', sdkMessage: '', sessionsLoading: true });
     window.claude.getCwd()
       .then(cwd => { if (cwd) useStore.setState({ activeCwd: cwd }); })
       .catch(() => {});
-    window.claude.listSessions()
-      .then(sessions => useStore.setState({ sessions, sessionsLoading: false }))
+    window.claude.listSessions(limit)
+      .then(sessions => useStore.setState({ sessions, sessionsLoading: false, sessionsHasMore: sessions.length >= limit }))
       .catch(() => useStore.setState({ sessionsLoading: false }));
     window.mcp.getServerStatus()
       .then(mcpServers => {
@@ -61,8 +71,9 @@ export function initIpcBridge(): () => void {
         useStore.setState({ activeSessionId: result.sessionId });
         // Persist toolbar prefs for new sessions (first message assigns sessionId)
         if (!prevId) persistCurrentToolbarPrefs(result.sessionId);
-        window.claude.listSessions()
-          .then(sessions => useStore.setState({ sessions, sessionsLoading: false }))
+        const lim = useStore.getState().sessionsLimit;
+        window.claude.listSessions(lim)
+          .then(sessions => useStore.setState({ sessions, sessionsLoading: false, sessionsHasMore: sessions.length >= lim }))
           .catch(() => {});
       }
     }
@@ -76,12 +87,13 @@ export function initIpcBridge(): () => void {
   // On HMR reload, init events already fired — poll current status
   window.claude.getSdkStatus().then(({ status, message }) => {
     if (status === 'ready') {
+      const hmrLimit = useStore.getState().sessionsLimit;
       useStore.setState({ sdkStatus: 'ready', sdkMessage: '', sessionsLoading: true });
       window.claude.getCwd()
         .then(cwd => { if (cwd) useStore.setState({ activeCwd: cwd }); })
         .catch(() => {});
-      window.claude.listSessions()
-        .then(sessions => useStore.setState({ sessions, sessionsLoading: false }))
+      window.claude.listSessions(hmrLimit)
+        .then(sessions => useStore.setState({ sessions, sessionsLoading: false, sessionsHasMore: sessions.length >= hmrLimit }))
         .catch(() => useStore.setState({ sessionsLoading: false }));
       window.mcp.getServerStatus()
         .then(mcpServers => {

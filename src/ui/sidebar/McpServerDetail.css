@@ -66,11 +66,11 @@
 
 .mcp-detail__error {
   font-size: var(--text-sm);
-  color: var(--error);
-  background: color-mix(in srgb, var(--error) 10%, transparent);
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
-  border-left: 3px solid var(--error);
+  border-left: 3px solid var(--danger);
 }
 
 .mcp-detail__info {
@@ -114,8 +114,8 @@
 }
 
 .mcp-detail__action-btn--danger:hover {
-  color: var(--error);
-  background: color-mix(in srgb, var(--error) 10%, transparent);
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
 }
 
 /* ─── Tools List ─── */
@@ -160,5 +160,5 @@
 }
 
 .mcp-tool-badge--read-only   { color: var(--success); background: color-mix(in srgb, var(--success) 15%, transparent); }
-.mcp-tool-badge--destructive { color: var(--error);   background: color-mix(in srgb, var(--error) 15%, transparent); }
+.mcp-tool-badge--destructive { color: var(--danger);   background: color-mix(in srgb, var(--danger) 15%, transparent); }
 .mcp-tool-badge--open-world  { color: var(--info);    background: color-mix(in srgb, var(--info) 15%, transparent); }

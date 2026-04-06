@@ -44,7 +44,7 @@ export default function Dropdown({ options, value, onChange, placeholder }: Prop
       ? rect.top - menuHeight - MENU_GAP
       : rect.bottom + MENU_GAP;
 
-    setMenuStyle({ top, left: rect.left, width: rect.width });
+    setMenuStyle({ top, left: rect.left, minWidth: rect.width });
   }, []);
 
   useEffect(() => {
@@ -57,8 +57,11 @@ export default function Dropdown({ options, value, onChange, placeholder }: Prop
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
 
-    // Close on any scroll (captures settings panel scroll too)
-    const onScroll = () => setOpen(false);
+    // Close on external scroll (but not scroll inside the menu itself)
+    const onScroll = (e: Event) => {
+      if (menuRef.current?.contains(e.target as Node)) return;
+      setOpen(false);
+    };
 
     document.addEventListener('mousedown', onClickOutside);
     document.addEventListener('scroll', onScroll, true);

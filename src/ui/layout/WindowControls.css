@@ -6,6 +6,8 @@
   gap: 0;
   padding: 0;
   -webkit-app-region: no-drag;
+  position: relative;
+  z-index: 3100;
 }
 
 .wc-btn {

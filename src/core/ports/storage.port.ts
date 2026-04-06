@@ -1,3 +1,5 @@
+import type { Connection } from '../types/connection';
+
 export interface IStoragePort {
   open(): void;
   close(): void;
@@ -9,4 +11,10 @@ export interface IStoragePort {
   getSessionPrefs(sessionId: string): Record<string, string>;
   setSessionPref(sessionId: string, key: string, value: string): void;
   deleteSessionPrefs(sessionId: string): void;
+  // Connections
+  getConnections(): Connection[];
+  getConnection(id: string): Connection | null;
+  createConnection(conn: Connection): void;
+  updateConnection(conn: Connection): void;
+  deleteConnection(id: string): void;
 }

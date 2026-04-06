@@ -1,0 +1,83 @@
+/* ─── Connection Picker ─── */
+
+.conn-picker {
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+
+.conn-picker__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--bg-elevated);
+  cursor: pointer;
+}
+
+.conn-picker__name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--fg-primary);
+  white-space: nowrap;
+}
+
+.conn-picker__status {
+  font-size: var(--text-2xs);
+  font-family: var(--font-mono);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+}
+
+.conn-picker__chevron {
+  color: var(--fg-tertiary);
+  display: flex;
+  transition: transform var(--transition-fast);
+  transform: rotate(90deg);
+}
+
+.conn-picker__chevron.is-open {
+  transform: rotate(-90deg);
+}
+
+/* ─── Menu ─── */
+
+.conn-picker__menu {
+  position: fixed;
+  z-index: 1000;
+  background: var(--bg-elevated);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+  min-width: 160px;
+}
+
+.conn-picker__item {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--fg-secondary);
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.conn-picker__item:hover {
+  background: var(--accent-dim);
+  color: var(--fg-primary);
+}
+
+.conn-picker__item.is-active {
+  color: var(--accent);
+}
+
+.conn-picker__divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-1) var(--space-2);
+}

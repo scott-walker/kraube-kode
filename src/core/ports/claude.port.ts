@@ -7,8 +7,9 @@ export interface InitStageInfo {
 
 export interface IClaudePort {
   init(): Promise<void>;
-  reinit(settings: { executable: string; configDir: string; permissionMode: string }): void;
-  newSession(cwd: string): void;
+  reinit(connection: { executable: string; configDir: string; permissionMode: string }): 'instant' | 'initializing';
+  newSession(cwd: string): 'instant' | 'initializing';
+  resumeSession(cwd: string): 'instant' | 'initializing';
 
   readonly ready: boolean;
   readonly initError: string | null;

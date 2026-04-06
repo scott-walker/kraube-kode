@@ -1,4 +1,5 @@
 import { memo, useEffect } from 'react';
+import { pushOverlay, popOverlay } from '../../state/actions';
 import './ConfirmDialog.css';
 
 interface Props {
@@ -11,6 +12,11 @@ interface Props {
 }
 
 export default memo(function ConfirmDialog({ title, message, confirmLabel = 'Confirm', danger, onConfirm, onCancel }: Props) {
+  useEffect(() => {
+    pushOverlay();
+    return () => popOverlay();
+  }, []);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onCancel();
