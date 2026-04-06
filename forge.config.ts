@@ -1,25 +1,48 @@
+import { resolve } from 'node:path';
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerSquirrel } from '@electron-forge/maker-squirrel';
-import { MakerZIP } from '@electron-forge/maker-zip';
-import { MakerDeb } from '@electron-forge/maker-deb';
-import { MakerRpm } from '@electron-forge/maker-rpm';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-natives';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import { PublisherGithub } from '@electron-forge/publisher-github';
+
+const iconPath = resolve(__dirname, 'assets', 'icon.png');
+
+const nativeModules = ['better-sqlite3', 'bindings', 'file-uri-to-path'];
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
+    asar: {
+      unpack: '**/{better-sqlite3,bindings,file-uri-to-path}/**',
+    },
+    icon: resolve(__dirname, 'assets', 'icon'),
+    extraResource: [iconPath],
+    ignore: (file: string) => {
+      if (!file) return false;
+      if (file.startsWith('/.vite')) return false;
+      if (file === '/package.json') return false;
+      if (file.startsWith('/node_modules')) {
+        if (file === '/node_modules') return false;
+        return !nativeModules.includes(file.split('/')[2]);
+      }
+      return true;
+    },
   },
   rebuildConfig: {
     onlyModules: ['better-sqlite3'],
   },
   makers: [
-    new MakerSquirrel({}),
-    new MakerZIP({}, ['darwin']),
-    new MakerRpm({}),
-    new MakerDeb({}),
+    { name: '@electron-forge/maker-squirrel', config: {} },
+    { name: '@electron-forge/maker-zip', platforms: ['darwin'], config: {} },
+    { name: '@electron-forge/maker-rpm', config: { icon: iconPath } },
+    { name: '@electron-forge/maker-deb', config: { icon: iconPath } },
+  ],
+  publishers: [
+    new PublisherGithub({
+      repository: { owner: 'scott-walker', name: 'kraube-kode' },
+      prerelease: false,
+      draft: true,
+    }),
   ],
   plugins: [
     new AutoUnpackNativesPlugin({}),
