@@ -18,6 +18,10 @@ import type { ITranscriptionPort } from '../core/ports/transcription.port';
 
 if (started) app.quit();
 
+if (!app.isPackaged) {
+  app.setPath('userData', app.getPath('userData') + '-dev');
+}
+
 const ZOOM_STEP = 0.05;
 
 // ── DI wiring ──
@@ -26,10 +30,14 @@ storage.open();
 
 const settingsService = new SettingsService(storage);
 const connectionService = new ConnectionService(storage);
+let mainWindow: BrowserWindow | null = null;
+const getWindow = () => mainWindow;
+
 const activeConnection = connectionService.getActive();
 const claudeAdapter = new ClaudeConnectorAdapter(
   activeConnection,
   (id: string) => connectionService.get(id),
+  getWindow,
 );
 const streamGuard = new StreamGuard(claudeAdapter);
 
@@ -41,13 +49,10 @@ const getTranscriptionAdapter = (): ITranscriptionPort => {
   return transcriptionAdapters[provider] ?? transcriptionAdapters['openai-whisper'];
 };
 
-let mainWindow: BrowserWindow | null = null;
-const getWindow = () => mainWindow;
-
 // ── IPC ──
 registerSettingsHandlers(settingsService, storage);
 registerConnectionHandlers(connectionService, claudeAdapter, getWindow);
-registerClaudeHandlers(getWindow, claudeAdapter, streamGuard);
+registerClaudeHandlers(getWindow, claudeAdapter, streamGuard, claudeAdapter.pendingPermissions, claudeAdapter.pendingElicitations);
 registerWindowHandlers(getWindow, claudeAdapter);
 registerTranscriptionHandlers(getTranscriptionAdapter, settingsService);
 registerMcpHandlers(claudeAdapter);
@@ -57,6 +62,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1600, height: 1000, minWidth: 800, minHeight: 600,
     title: 'Kraube Kode', frame: false, titleBarStyle: 'hidden',
+    icon: path.join(__dirname, '..', '..', 'assets', 'icon.png'),
     backgroundColor: '#00000000', hasShadow: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

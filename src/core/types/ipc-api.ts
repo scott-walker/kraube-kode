@@ -4,6 +4,7 @@ import type { GlobalSettings } from './settings';
 import type { Connection } from './connection';
 import type { TranscriptionResult } from './transcription';
 import type { McpServer, McpServerConfig, McpSetServersResult } from './mcp';
+import type { PermissionRequestPayload, ElicitationRequestPayload } from './interactive';
 
 export interface SlashCommand {
   name: string;
@@ -31,7 +32,11 @@ export interface ClaudeAPI {
   readThumbnail: (filePath: string, size: number) => Promise<string | null>;
   pickFiles: () => Promise<string[]>;
   getPathForFile: (file: File) => string;
+  respondPermission: (requestId: string, behavior: 'allow' | 'deny', message?: string) => void;
+  respondElicitation: (requestId: string, action: 'accept' | 'decline' | 'cancel', content?: Record<string, unknown>) => void;
   onEvent: (cb: (event: unknown, data: StreamEvent) => void) => () => void;
+  onPermissionRequest: (cb: (event: unknown, data: PermissionRequestPayload) => void) => () => void;
+  onElicitationRequest: (cb: (event: unknown, data: ElicitationRequestPayload) => void) => () => void;
   onInitReady: (cb: () => void) => () => void;
   onInitStage: (cb: (event: unknown, data: { stage: string; message: string }) => void) => () => void;
   onInitError: (cb: (event: unknown, message: string) => void) => () => void;

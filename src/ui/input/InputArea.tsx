@@ -1,6 +1,6 @@
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useIsStreaming, useAttachedFiles, useTranscriptionConfigured, useActiveSessionId } from '../../state/selectors';
-import { sendMessage, attachFiles, removeFile } from '../../state/actions';
+import { sendMessage, attachFiles, removeFile, abortStream } from '../../state/actions';
 import { useVoiceInput } from '../../hooks/useVoiceInput';
 import { useImagePaste } from '../../hooks/useImagePaste';
 import Tooltip from '../shared/Tooltip';
@@ -106,6 +106,11 @@ export default memo(function InputArea() {
     };
 
     const handleGlobalKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'с') && isStreaming) {
+        e.preventDefault();
+        abortStream();
+        return;
+      }
       if (e.ctrlKey && e.key === '/') {
         e.preventDefault();
         if (!micDisabled) handleToggleRecording();
@@ -126,7 +131,7 @@ export default memo(function InputArea() {
     };
     window.addEventListener('keydown', handleGlobalKey);
     return () => window.removeEventListener('keydown', handleGlobalKey);
-  }, [micDisabled, handleToggleRecording, cancelRecording, recordingState]);
+  }, [isStreaming, micDisabled, handleToggleRecording, cancelRecording, recordingState]);
 
   // Command palette: open when text starts with "/" (no spaces yet = still picking command)
   const isSlashTyping = text.startsWith('/') && !text.includes(' ');
@@ -158,6 +163,8 @@ export default memo(function InputArea() {
     draftsRef.current.delete(sessionId);
     setTextRaw('');
     setCmdOpen(false);
+    const el = inputRef.current;
+    if (el) el.style.height = '';
   }, [text, isStreaming, attachedFiles, sessionId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -180,6 +187,14 @@ export default memo(function InputArea() {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 160) + 'px';
   };
+
+  useEffect(() => {
+    const el = inputRef.current;
+    if (el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+    }
+  }, [text]);
 
   return (
     <div className="input-area">
@@ -232,10 +247,19 @@ export default memo(function InputArea() {
                 {recordingState === 'transcribing' ? <Icons.Spinner size={18} /> : recordingState === 'recording' ? <Icons.MicActive size={18} /> : <Icons.Mic size={18} />}
               </button>
             </Tooltip>
-            <button onClick={handleSubmit}
-              className={`input-area__btn input-area__btn--send${text.trim() && recordingState === 'idle' ? ' is-active' : ''}`}>
-              <Icons.Send size={16} />
-            </button>
+            {isStreaming ? (
+              <Tooltip text={<>Stop <kbd className="tooltip-kbd">Ctrl+C</kbd></>}>
+                <button onClick={abortStream}
+                  className="input-area__btn input-area__btn--stop">
+                  <Icons.Stop size={16} />
+                </button>
+              </Tooltip>
+            ) : (
+              <button onClick={handleSubmit}
+                className={`input-area__btn input-area__btn--send${text.trim() && recordingState === 'idle' ? ' is-active' : ''}`}>
+                <Icons.Send size={16} />
+              </button>
+            )}
           </div>
           <InputToolbar />
         </div>

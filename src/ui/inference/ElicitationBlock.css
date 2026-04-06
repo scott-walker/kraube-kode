@@ -1,50 +1,61 @@
-/* ─── ApprovalBlock ─── */
+/* --- ElicitationBlock --- */
 
-.approval-block {
+.elicitation-block {
   padding: var(--space-4);
   border-radius: var(--radius-xl);
   background: var(--bg-elevated);
-  border-left: 2px solid var(--warning);
+  border-left: 2px solid var(--accent);
   animation: slide-up var(--transition-slow);
 }
 
-.approval-block--resolved {
+.elicitation-block--resolved {
   opacity: 0.6;
 }
 
-.approval-block__header {
+.elicitation-block__header {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: 10px;
 }
 
-.approval-block__title {
+.elicitation-block__title {
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
   color: var(--fg-primary);
 }
 
-.approval-block__command {
+.elicitation-block__server {
+  font-size: var(--text-sm);
+  color: var(--fg-tertiary);
+  margin-left: auto;
   font-family: var(--font-mono);
+}
+
+.elicitation-block__message {
   font-size: var(--text-sm);
   color: var(--fg-secondary);
   padding: var(--space-2) var(--space-3);
   background: var(--bg-code);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-3);
+  white-space: pre-wrap;
 }
 
-.approval-block__tool-name {
-  color: var(--fg-tertiary);
+.elicitation-block__url {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+  word-break: break-all;
 }
 
-.approval-block__actions {
+.elicitation-block__actions {
   display: flex;
   gap: var(--space-2);
 }
 
-.approval-block__btn {
+.elicitation-block__btn {
   padding: 7px 20px;
   border-radius: var(--radius-md);
   border: none;
@@ -55,17 +66,17 @@
   transition: opacity var(--transition-base);
 }
 
-.approval-block__btn--approve {
+.elicitation-block__btn--accept {
   background: var(--accent);
   color: #fff;
 }
 
-.approval-block__btn--deny {
+.elicitation-block__btn--decline {
   background: var(--bg-tertiary);
   color: var(--fg-secondary);
 }
 
-.approval-block__btn--always {
+.elicitation-block__btn--cancel {
   margin-left: auto;
   background: var(--bg-tertiary);
   color: var(--fg-tertiary);

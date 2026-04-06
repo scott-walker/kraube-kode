@@ -3,6 +3,8 @@ import { processEvent, streamBuffer } from '../stream-processor';
 import { persistCurrentToolbarPrefs } from '../actions';
 import { loadConnections } from '../connection-actions';
 import type { StreamEvent } from '../../types';
+import type { PermissionRequestPayload, ElicitationRequestPayload } from '../../core/types/interactive';
+import { toolDetail } from '../../utils/tool-detail';
 
 export function initIpcBridge(): () => void {
   // Load connections first — determines if setup is required
@@ -79,6 +81,53 @@ export function initIpcBridge(): () => void {
     }
   });
 
+  const cleanupPermission = window.claude.onPermissionRequest((_ev, data) => {
+    const payload = data as PermissionRequestPayload;
+    const detail = toolDetail(payload.toolName, payload.input) ?? JSON.stringify(payload.input).slice(0, 120);
+    const block = { type: 'approval' as const, requestId: payload.requestId, tool: payload.toolName, command: detail };
+
+    useStore.setState(s => {
+      const messages = [...s.messages];
+      const last = messages[messages.length - 1];
+      if (last?.role === 'assistant') {
+        const blocks = [...(last.blocks ?? []), block];
+        messages[messages.length - 1] = { ...last, blocks };
+      } else {
+        messages.push({ role: 'assistant', content: '', blocks: [block], streaming: true });
+      }
+      return { messages };
+    });
+
+    streamBuffer.get().push(block);
+  });
+
+  const cleanupElicitation = window.claude.onElicitationRequest((_ev, data) => {
+    const payload = data as ElicitationRequestPayload;
+    const block = {
+      type: 'elicitation' as const,
+      requestId: payload.requestId,
+      serverName: payload.serverName,
+      message: payload.message,
+      mode: payload.mode,
+      url: payload.url,
+      requestedSchema: payload.requestedSchema,
+    };
+
+    useStore.setState(s => {
+      const messages = [...s.messages];
+      const last = messages[messages.length - 1];
+      if (last?.role === 'assistant') {
+        const blocks = [...(last.blocks ?? []), block];
+        messages[messages.length - 1] = { ...last, blocks };
+      } else {
+        messages.push({ role: 'assistant', content: '', blocks: [block], streaming: true });
+      }
+      return { messages };
+    });
+
+    streamBuffer.get().push(block);
+  });
+
   // Load transcription config flag
   window.settings.load()
     .then(s => useStore.setState({ transcriptionConfigured: !!s.transcriptionApiKey }))
@@ -111,5 +160,7 @@ export function initIpcBridge(): () => void {
     cleanupStage();
     cleanupError();
     cleanupEvents();
+    cleanupPermission();
+    cleanupElicitation();
   };
 }

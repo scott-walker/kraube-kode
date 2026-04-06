@@ -49,8 +49,23 @@ export interface TextBlockData {
 
 export interface ApprovalData {
   type: 'approval';
+  requestId: string;
   tool: string;
   command: string;
+  resolved?: boolean;
+  decision?: 'allow' | 'deny';
+}
+
+export interface ElicitationData {
+  type: 'elicitation';
+  requestId: string;
+  serverName: string;
+  message: string;
+  mode?: 'form' | 'url';
+  url?: string;
+  requestedSchema?: Record<string, unknown>;
+  resolved?: boolean;
+  decision?: 'accept' | 'decline' | 'cancel';
 }
 
 export interface SummaryStatsData {
@@ -67,6 +82,7 @@ export type MessageBlock =
   | LoopProgressData
   | TextBlockData
   | ApprovalData
+  | ElicitationData
   | SummaryStatsData;
 
 export interface Message {

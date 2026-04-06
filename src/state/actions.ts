@@ -2,7 +2,7 @@ import { useStore } from './store';
 import type { ToolbarPermission, ToolbarEffort, SettingsSection, ManagementSection } from './store';
 import { streamBuffer } from './stream-processor';
 import { mapSessionMessages } from '../utils/session-message-mapper';
-import type { Message, MessageBlock } from '../types';
+import type { Message, MessageBlock, ApprovalData, ElicitationData } from '../types';
 import type { Theme } from '../theme';
 
 // ─── UI ───
@@ -157,6 +157,7 @@ export async function newSession() {
     activeSessionId: '',
     messages: [],
     activeCwd: cwd,
+    currentView: 'chat',
     sdkStatus: 'initializing',
     sdkMessage: 'Warming up SDK session…',
     ...TOOLBAR_DEFAULTS,
@@ -217,6 +218,44 @@ export async function deleteSession(sessionId: string) {
       sessions,
       ...(cleared ? { activeSessionId: '', messages: [], messagesLoading: false, ...TOOLBAR_DEFAULTS } : {}),
     };
+  });
+}
+
+// ─── Interactive Responses ───
+
+export function resolveApproval(requestId: string, decision: 'allow' | 'deny') {
+  useStore.setState(s => {
+    const messages = [...s.messages];
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const msg = messages[i];
+      if (!msg.blocks) continue;
+      const blockIdx = msg.blocks.findIndex(b => b.type === 'approval' && (b as ApprovalData).requestId === requestId);
+      if (blockIdx === -1) continue;
+      const blocks = [...msg.blocks];
+      const prev = blocks[blockIdx] as ApprovalData;
+      blocks[blockIdx] = { ...prev, resolved: true, decision };
+      messages[i] = { ...msg, blocks };
+      break;
+    }
+    return { messages };
+  });
+}
+
+export function resolveElicitation(requestId: string, decision: 'accept' | 'decline' | 'cancel') {
+  useStore.setState(s => {
+    const messages = [...s.messages];
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const msg = messages[i];
+      if (!msg.blocks) continue;
+      const blockIdx = msg.blocks.findIndex(b => b.type === 'elicitation' && (b as ElicitationData).requestId === requestId);
+      if (blockIdx === -1) continue;
+      const blocks = [...msg.blocks];
+      const prev = blocks[blockIdx] as ElicitationData;
+      blocks[blockIdx] = { ...prev, resolved: true, decision };
+      messages[i] = { ...msg, blocks };
+      break;
+    }
+    return { messages };
   });
 }
 

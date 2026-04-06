@@ -1,7 +1,12 @@
+import { randomUUID } from 'node:crypto';
 import { homedir } from 'node:os';
+import type { BrowserWindow } from 'electron';
 import { Claude } from '@scottwalker/kraube-konnektor';
+import type { CanUseTool, OnElicitation } from '@scottwalker/kraube-konnektor';
 import type { Connection } from '../../core/types/connection';
 import type { PoolStatus, SwitchResult, ISessionPool } from '../../core/ports/session-pool.port';
+import { PendingRequests } from './pending-requests';
+import type { PermissionResponse, ElicitationResponse } from '../../core/types/interactive';
 
 function expandHome(p: string): string {
   return p.startsWith('~') ? homedir() + p.slice(1) : p;
@@ -27,11 +32,14 @@ type StatusCallback = (event: PoolStatusEvent) => void;
 export class SessionPool implements ISessionPool {
   private pool = new Map<string, InternalEntry>();
   private activeKey = '';
+  readonly permissionRequests = new PendingRequests<PermissionResponse>();
+  readonly elicitationRequests = new PendingRequests<ElicitationResponse>();
 
   constructor(
     private getConnection: (id: string) => Connection | null,
     private onStatusChange: StatusCallback,
     private isKeyStreaming: (key: string) => boolean,
+    private getWindow: () => BrowserWindow | null,
     private maxSize = 5,
   ) {}
 
@@ -146,7 +154,36 @@ export class SessionPool implements ISessionPool {
       env: Object.keys(env).length > 0 ? env : undefined,
       cwd: cwd || undefined,
       stderr: (data) => console.error('[claude stderr]', data),
+      canUseTool: this.buildCanUseTool(),
+      onElicitation: this.buildOnElicitation(),
     });
+  }
+
+  private buildCanUseTool(): CanUseTool {
+    return async (toolName, input, { toolUseID }) => {
+      const requestId = randomUUID();
+      const wc = this.getWindow()?.webContents;
+      if (!wc) return { behavior: 'deny', message: 'No window available' };
+
+      wc.send('claude:permission-request', { requestId, toolName, input, toolUseID });
+      const response = await this.permissionRequests.register(requestId);
+
+      if (response.behavior === 'allow') return { behavior: 'allow' };
+      return { behavior: 'deny', message: response.message ?? 'User denied' };
+    };
+  }
+
+  private buildOnElicitation(): OnElicitation {
+    return async (request, { signal: _signal }) => {
+      const requestId = randomUUID();
+      const wc = this.getWindow()?.webContents;
+      if (!wc) return { action: 'cancel' };
+
+      wc.send('claude:elicitation-request', { requestId, ...request });
+      const response = await this.elicitationRequests.register(requestId);
+
+      return { action: response.action, content: response.content };
+    };
   }
 
   private wireEvents(claude: Claude, key: string, entry: InternalEntry): void {

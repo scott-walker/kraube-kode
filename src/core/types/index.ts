@@ -6,3 +6,4 @@ export * from './mcp';
 export * from './message';
 export * from './ipc-api';
 export * from './transcription';
+export * from './interactive';

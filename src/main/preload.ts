@@ -31,9 +31,24 @@ contextBridge.exposeInMainWorld('claude', {
   pickFiles: () => ipcRenderer.invoke('claude:pick-files') as Promise<string[]>,
   getPathForFile: (file: File) => webUtils.getPathForFile(file),
 
+  respondPermission: (requestId: string, behavior: 'allow' | 'deny', message?: string) =>
+    ipcRenderer.send('claude:permission-response', { requestId, behavior, message }),
+  respondElicitation: (requestId: string, action: 'accept' | 'decline' | 'cancel', content?: Record<string, unknown>) =>
+    ipcRenderer.send('claude:elicitation-response', { requestId, action, content }),
+
   onEvent: (cb: (event: unknown, data: unknown) => void) => {
     ipcRenderer.on('claude:event', cb);
     return () => ipcRenderer.removeListener('claude:event', cb);
+  },
+
+  onPermissionRequest: (cb: (event: unknown, data: unknown) => void) => {
+    ipcRenderer.on('claude:permission-request', cb);
+    return () => ipcRenderer.removeListener('claude:permission-request', cb);
+  },
+
+  onElicitationRequest: (cb: (event: unknown, data: unknown) => void) => {
+    ipcRenderer.on('claude:elicitation-request', cb);
+    return () => ipcRenderer.removeListener('claude:elicitation-request', cb);
   },
 
   onInitReady: (cb: () => void) => {

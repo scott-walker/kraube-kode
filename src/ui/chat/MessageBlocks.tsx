@@ -7,6 +7,7 @@ import DiffBlock from '../inference/DiffBlock';
 import TerminalOutput from '../inference/TerminalOutput';
 import LoopProgress from '../inference/LoopProgress';
 import ApprovalBlock from '../inference/ApprovalBlock';
+import ElicitationBlock from '../inference/ElicitationBlock';
 import type { MessageBlock } from '../../types';
 
 type BlockRenderer<T extends MessageBlock> = (block: T, key: number) => ReactElement | null;
@@ -19,7 +20,8 @@ const blockRegistry: RendererMap = {
   diff:         (b, k) => <DiffBlock key={k} filename={b.filename} additions={b.additions} deletions={b.deletions} lines={b.lines} />,
   terminal:     (b, k) => <TerminalOutput key={k} output={b.output} />,
   loop_progress:(b, k) => <LoopProgress key={k} current={b.current} total={b.total} label={b.label} />,
-  approval:     (b, k) => <ApprovalBlock key={k} tool={b.tool} command={b.command} onApprove={() => {}} onDeny={() => {}} />,
+  approval:     (b, k) => <ApprovalBlock key={k} requestId={b.requestId} tool={b.tool} command={b.command} resolved={b.resolved} decision={b.decision} />,
+  elicitation:  (b, k) => <ElicitationBlock key={k} requestId={b.requestId} serverName={b.serverName} message={b.message} mode={b.mode} url={b.url} resolved={b.resolved} decision={b.decision} />,
   text:         (b, k) => <MarkdownText key={k} content={b.content} />,
   summary:      (b, k) => (
     <div key={k} className="message__summary">

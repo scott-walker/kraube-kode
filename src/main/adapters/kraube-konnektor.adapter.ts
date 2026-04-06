@@ -1,6 +1,7 @@
 import { homedir } from 'node:os';
 import { readdir, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
+import type { BrowserWindow } from 'electron';
 import { listSessions, getSessionMessages, type StreamEvent } from '@scottwalker/kraube-konnektor';
 import type { IClaudePort, InitStageInfo } from '../../core/ports/claude.port';
 import type { IMcpPort } from '../../core/ports/mcp.port';
@@ -26,17 +27,22 @@ export class ClaudeConnectorAdapter implements IClaudePort, IMcpPort {
   constructor(
     connection: Connection | null,
     private getConnection: (id: string) => Connection | null,
+    private getWindow: () => BrowserWindow | null = () => null,
   ) {
     this.pool = new SessionPool(
       getConnection,
       (event) => this.handlePoolStatus(event),
       (key) => this.streamingKey === key,
+      this.getWindow,
     );
     if (connection) {
       this.activeConnectionId = connection.id;
       this.applyConfigDir(connection.configDir);
     }
   }
+
+  get pendingPermissions() { return this.pool.permissionRequests; }
+  get pendingElicitations() { return this.pool.elicitationRequests; }
 
   get ready() { return this.pool.activeEntry()?.status === 'ready'; }
   get initError() { return this.pool.activeEntry()?.error ?? null; }

@@ -4,6 +4,8 @@ import { basename, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import type { IClaudePort } from '../../core/ports/claude.port';
 import type { StreamGuard } from '../services/stream-guard';
+import type { PendingRequests } from '../services/pending-requests';
+import type { PermissionResponse, ElicitationResponse } from '../../core/types/interactive';
 
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg']);
 
@@ -35,6 +37,8 @@ export function registerClaudeHandlers(
   getWindow: () => BrowserWindow | null,
   claudePort: IClaudePort,
   streamGuard: StreamGuard,
+  pendingPermissions: PendingRequests<PermissionResponse>,
+  pendingElicitations: PendingRequests<ElicitationResponse>,
 ): void {
   ipcMain.on('claude:send', async (_event, prompt: string, files?: string[], options?: Record<string, string>) => {
     const wc = getWindow()?.webContents;
@@ -132,5 +136,13 @@ export function registerClaudeHandlers(
       getWindow()?.webContents.send('claude:init-ready');
     }
     return { instant: result === 'instant' };
+  });
+
+  ipcMain.on('claude:permission-response', (_event, data: { requestId: string } & PermissionResponse) => {
+    pendingPermissions.resolve(data.requestId, { behavior: data.behavior, message: data.message });
+  });
+
+  ipcMain.on('claude:elicitation-response', (_event, data: { requestId: string } & ElicitationResponse) => {
+    pendingElicitations.resolve(data.requestId, { action: data.action, content: data.content });
   });
 }

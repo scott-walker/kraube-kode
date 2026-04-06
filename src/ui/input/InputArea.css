@@ -159,6 +159,18 @@
   color: var(--bg-primary);
 }
 
+.input-area__btn--stop {
+  width: 32px;
+  height: 32px;
+  background: var(--danger, #e54d2e);
+  color: var(--bg-primary);
+  align-self: center;
+}
+
+.input-area__btn--stop:hover {
+  opacity: 0.85;
+}
+
 /* ─── Toolbar ─── */
 
 .input-area__toolbar {
