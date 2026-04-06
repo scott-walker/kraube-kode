@@ -93,3 +93,6 @@ out/
 
 # Vite build output
 dist/
+
+# Home directory artifacts
+~/
